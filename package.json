@@ -1,0 +1,25 @@
+{
+  "name": "extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "run-p watch-pug watch-sass watch-ts",
+    "watch-pug": "pug -w src -o dist",
+    "watch-sass": "sass -w src:dist",
+    "watch-ts": "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "pug": "^3.0.2",
+    "pug-cli": "^1.0.0-alpha6",
+    "sass": "^1.53.0",
+    "typescript": "^4.7.4"
+  },
+  "overrides": {
+    "pug": "^3.0.2"
+  }
+}

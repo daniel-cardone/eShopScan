@@ -1,0 +1,20 @@
+$base: lighten(#a7c4c2, 20%);
+$normal: darken($base, 5%);
+$primary: #db2955;
+$secondary: #4c86a8;
+$dark: #2f2f2f;
+$gray: #92b4a7;
+
+@font-face {
+  font-family: "PT Sans";
+  src: url(/res/PTSans-Regular.ttf);
+}
+
+html, body {
+  width: 400px;
+  height: 600px;
+  margin: 0;
+  padding: 0;
+  background: $base;
+  font-family: "PT Sans", sans-serif;
+}
