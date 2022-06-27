@@ -18,5 +18,11 @@
     "32": "/res/icon-32.png",
     "48": "/res/icon-48.png",
     "128": "/res/icon-128.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["/res/stores.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

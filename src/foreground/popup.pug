@@ -7,4 +7,14 @@ html(lang="en")
     title eShopScan
     link(rel="stylesheet", href="style.css")
   body
-    script(src="main.js")
+    header
+      h1 eShopScan
+    main
+      #loading
+        h2 Searching for a product on this page...
+        .loading-ring
+      #success.hidden
+        button Track this product
+      #failure.hidden
+        h2.err Could not find a product on this page
+    script(type="module", src="main.js")

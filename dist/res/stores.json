@@ -1,0 +1,39 @@
+{
+  "Amazon": {
+    "website": "amazon.com",
+    "img": "#landingImage",
+    "name": "#productTitle",
+    "price": ".a-offscreen"
+  },
+  "Nike": {
+    "website": "nike.com",
+    "img": "picture img",
+    "name": "#pdp_product_title",
+    "price": ".product-price"
+  },
+  "Dick's Sporting Goods": {
+    "website": "dickssportinggoods.com",
+    "img": "[data-cy*=product-image]",
+    "name": "h1.title",
+    "price": ".product-price"
+  },
+  "Olympia Sports": {
+    "website": "olympiasports.net",
+    "img": "#aaaaaaaaaaaaaaaaaaaaaaaa",
+    "name": "#aaaaaaaaaaaaaaa",
+    "price": "#aaaaaaaaaaaa"
+  },
+  "Big Lots": {
+    "website": "biglots.com",
+    "img": "#resolve_1",
+    "name": ".product-name h1",
+    "price": ".regular-price",
+    "stock": ".out-of-stock-msg"
+  },
+  "Walgreens": {
+    "website": "walgreens.com",
+    "img": "#productImg",
+    "name": "#productTitle",
+    "price": "#regular-price-info"
+  }
+}

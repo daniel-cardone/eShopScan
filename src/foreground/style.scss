@@ -4,11 +4,9 @@ $primary: #db2955;
 $secondary: #4c86a8;
 $dark: #2f2f2f;
 $gray: #92b4a7;
+$error: #962401;
 
-@font-face {
-  font-family: "PT Sans";
-  src: url(/res/PTSans-Regular.ttf);
-}
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 
 html, body {
   width: 400px;
@@ -16,5 +14,57 @@ html, body {
   margin: 0;
   padding: 0;
   background: $base;
-  font-family: "PT Sans", sans-serif;
+  font-family: "Quicksand", sans-serif;
+  text-align: center;
+  color: $dark;
+  font-size: 16px;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: $primary;
+}
+
+h2 {
+  font-size: 1.75em;
+  color: $secondary;
+}
+
+p {
+  font-size: 1.25em;
+}
+
+.err {
+  color: $error;
+}
+
+button {
+  border: 1px solid $gray;
+  border-radius: 0.5rem;
+  color: $secondary;
+  background: $normal;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background: darken($normal, 5%);
+  }
+}
+
+.loading-ring {
+  width: 75px;
+  height: 75px;
+  border-top: 2px solid $gray;
+  border-left: 2px solid $gray;
+  border-radius: 50%;
+  animation: spin 2s infinite linear;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
