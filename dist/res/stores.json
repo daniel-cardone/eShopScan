@@ -34,6 +34,31 @@
     "website": "walgreens.com",
     "img": "#productImg",
     "name": "#productTitle",
-    "price": "#regular-price-info"
+    "price": "#regular-price-info",
+    "stock": {
+      "pickup": {
+        "click": "#wag-pickup-tab",
+        "selector": "[id*='Out of Stock']"
+      },
+      "shipping": {
+        "click": "#wag-shipping-tab",
+        "selector": ".wag-shipping-inner-content",
+        "default": true
+      }
+    }
+  },
+  "Famous Footwear": {
+    "website": "famousfootwear.com",
+    "img": ".product-image img",
+    "name": ".product-info__product-name",
+    "price": ".bfx-price",
+    "stock": {}
+  },
+  "Michaels": {
+    "website": "michaels.com",
+    "img": "img[id*=zoom]",
+    "name": ".product-name",
+    "price": ".product-sales-price",
+    "stock": {}
   }
 }

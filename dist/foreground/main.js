@@ -38,6 +38,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             for (const key in store) {
                 if (key === "website")
                     continue;
+                if (key === "stock")
+                    continue;
                 const value = store[key];
                 if (!document.querySelector(value)) {
                     hasProduct = false;
@@ -48,3 +50,5 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return onStoreSite && hasProduct;
     }
 }))();
+// TODO: add famous footwear, michaels
+// TODO: map out all the out of stock queries

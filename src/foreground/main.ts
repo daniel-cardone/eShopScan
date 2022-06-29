@@ -35,6 +35,7 @@
 
       for (const key in store) {
         if (key === "website") continue;
+        if (key === "stock") continue;
 
         const value = store[key];
         if (!document.querySelector(value)) {
@@ -48,3 +49,7 @@
   }
   
 })();
+
+// TODO: add famous footwear, michaels
+
+// TODO: map out all the out of stock queries
