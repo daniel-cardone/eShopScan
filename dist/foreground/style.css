@@ -36,6 +36,7 @@ button {
   background: #d5e3e2;
   font-size: 16px;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 button:hover {
   background: #c6d8d7;

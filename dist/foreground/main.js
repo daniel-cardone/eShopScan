@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     const found = script[0].result;
     if (found) {
         document.querySelector("#success").classList.remove("hidden");
+        createButtons();
     }
     else {
         document.querySelector("#failure").classList.remove("hidden");
@@ -48,6 +49,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             }
         }
         return onStoreSite && hasProduct;
+    }
+    function createButtons() {
+        let url = tab.url;
+        url = url.replace(/(https?:\/\/)?(www.)?/g, "");
+        url = url.slice(0, url.indexOf("/"));
+        for (const storeName in stores) {
+            const store = stores[storeName];
+            if (url !== store.website)
+                continue;
+            const stockOptions = store.stock;
+            for (const key in stockOptions) {
+                const value = stockOptions[key];
+                const button = document.createElement("button");
+                button.innerText = `Track this product for ${key}`;
+                button.addEventListener("click", () => {
+                    chrome.tabs.update({ url: value });
+                });
+                document.querySelector("#success").appendChild(button);
+            }
+            break;
+        }
     }
 }))();
 // TODO: add famous footwear, michaels
