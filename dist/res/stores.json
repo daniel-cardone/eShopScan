@@ -3,7 +3,14 @@
     "website": "amazon.com",
     "img": "#landingImage",
     "name": "#productTitle",
-    "price": ".a-offscreen"
+    "price": ".a-offscreen",
+    "stock": {
+      "shipping": {
+        "selector": "#availability",
+        "text": "n stock",
+        "default": true
+      }
+    }
   },
   "Nike": {
     "website": "nike.com",
