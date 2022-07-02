@@ -72,5 +72,4 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
     }
 }))();
-// TODO: add famous footwear, michaels
 // TODO: map out all the out of stock queries

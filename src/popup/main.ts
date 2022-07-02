@@ -77,6 +77,4 @@
   
 })();
 
-// TODO: add famous footwear, michaels
-
 // TODO: map out all the out of stock queries
