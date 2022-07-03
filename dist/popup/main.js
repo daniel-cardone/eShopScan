@@ -11,11 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const stores = yield fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
     const [tab] = yield chrome.tabs.query({ active: true, currentWindow: true });
+    let canRun = true;
     const script = yield chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: checkForProduct,
         args: [stores]
+    })
+        .catch(_ => {
+        canRun = false;
     });
+    if (!canRun)
+        return;
     const found = script[0].result;
     if (found) {
         document.querySelector("#success").classList.remove("hidden");

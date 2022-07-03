@@ -34,6 +34,12 @@ p {
   font-size: 1.25em;
 }
 
+a {
+  color: lighten($secondary, 10%);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .err {
   color: $error;
 }

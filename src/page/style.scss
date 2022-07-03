@@ -25,19 +25,25 @@ h1 {
   color: $primary;
 }
 
-.card {
-  border-top: 1px solid $gray;
-  border-bottom: 1px solid $gray;
-  height: 100px;
-  width: 100%;
-  margin: 0 1rem;
+.card-container {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
-  align-items: center;
-  img {
-    margin-right: 1rem;
-    height: 100%;
-    object-fit: contain;
+  .card {
+    flex: 1 0 calc(50% - 2rem);
+    border-top: 1px solid $gray;
+    height: 100px;
+    width: 100%;
+    margin: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    img {
+      margin-right: 1rem;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 }

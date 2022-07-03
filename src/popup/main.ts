@@ -3,12 +3,18 @@
   const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
+  let canRun = true;
   const script = await chrome.scripting.executeScript({
     target: { tabId: tab.id! },
     func: checkForProduct,
     args: [stores]
+  })
+  .catch(_ => {
+    canRun = false;
   });
-  const found = script[0].result!;
+  if (!canRun) return;
+  
+  const found = script![0].result!;
 
   if (found) {
     document.querySelector("#success")!.classList.remove("hidden");

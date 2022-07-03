@@ -10,9 +10,12 @@ html(lang="en")
     header
     main
       section
-        h1 All Tracked Products 
-        .card 
-          img(src="", alt="Product Image")
-          h3 Product Name
+        h1 All Tracked Products
+        .card-container
+          - for (let i = 0; i < 10; i++) {
+          .card
+            img(src="", alt="Product Image")
+            h3 Product Name
+          - }
     footer 
     script(src="main.js")

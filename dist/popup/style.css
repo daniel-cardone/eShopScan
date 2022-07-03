@@ -25,6 +25,12 @@ p {
   font-size: 1.25em;
 }
 
+a {
+  color: #6b9ebc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .err {
   color: #962401;
 }
