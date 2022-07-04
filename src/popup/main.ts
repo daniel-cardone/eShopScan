@@ -42,7 +42,8 @@
 
       for (const key in store) {
         if (key === "website") continue;
-        if (key === "stock") continue;
+        if (key === "check") continue;
+        if (key === "type") continue;
 
         const value = store[key];
         if (!document.querySelector(value)) {
@@ -55,7 +56,7 @@
     return onStoreSite && hasProduct;
   }
 
-  function createButtons() {
+  async function createButtons() {
     let url = tab.url!;
     url = url.replace(/(https?:\/\/)?(www.)?/g, "");
     url = url.slice(0, url.indexOf("/"));
@@ -65,16 +66,40 @@
 
       if (url !== store.website) continue;
 
-      const stockOptions = store.stock;
+      const storeType: StoreType = store.type;
+      if (storeType === "stock-text") {
+        const stockOptions = store.check;
 
-      for (const key in stockOptions) {
-        const value = stockOptions[key];
-        const button = document.createElement("button");
-        button.innerText = `Track this product for ${key}`;
-        button.addEventListener("click", () => {
-          chrome.tabs.update({ url: value });
+        for (const key in stockOptions) {
+          const value = stockOptions[key];
+          const button = document.createElement("button");
+          button.innerText = `Track this product for ${key}`;
+          button.addEventListener("click", () => {
+            console.log(key);
+          });
+          document.querySelector("#success")!.appendChild(button);
+        }
+      } else if (storeType === "size-boxes") {
+        const sizeBoxesSelector = store.check.selector;
+
+        const elements = await chrome.scripting.executeScript({
+          target: { tabId: tab.id! },
+          func: sizeBoxesSelector => document.querySelectorAll(sizeBoxesSelector),
+          args: [sizeBoxesSelector]
         });
-        document.querySelector("#success")!.appendChild(button);
+
+        console.log(elements)
+        
+        for (const el of elements![0].result ?? []) {
+          const button = document.createElement("button");
+          const upperCaseText = el.innerText.toUpperCase();
+          const size = SIZE_MAPPINGS[upperCaseText] || upperCaseText;
+          button.innerText = `Track this size ${size} for this product`;
+          button.addEventListener("click", () => {
+            console.log(size);
+          });
+          el.appendChild(button);
+        }
       }
 
       break;

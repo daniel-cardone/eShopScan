@@ -45,7 +45,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             for (const key in store) {
                 if (key === "website")
                     continue;
-                if (key === "stock")
+                if (key === "check")
+                    continue;
+                if (key === "type")
                     continue;
                 const value = store[key];
                 if (!document.querySelector(value)) {
@@ -57,25 +59,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return onStoreSite && hasProduct;
     }
     function createButtons() {
-        let url = tab.url;
-        url = url.replace(/(https?:\/\/)?(www.)?/g, "");
-        url = url.slice(0, url.indexOf("/"));
-        for (const storeName in stores) {
-            const store = stores[storeName];
-            if (url !== store.website)
-                continue;
-            const stockOptions = store.stock;
-            for (const key in stockOptions) {
-                const value = stockOptions[key];
-                const button = document.createElement("button");
-                button.innerText = `Track this product for ${key}`;
-                button.addEventListener("click", () => {
-                    chrome.tabs.update({ url: value });
-                });
-                document.querySelector("#success").appendChild(button);
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            let url = tab.url;
+            url = url.replace(/(https?:\/\/)?(www.)?/g, "");
+            url = url.slice(0, url.indexOf("/"));
+            for (const storeName in stores) {
+                const store = stores[storeName];
+                if (url !== store.website)
+                    continue;
+                const storeType = store.type;
+                if (storeType === "stock-text") {
+                    const stockOptions = store.check;
+                    for (const key in stockOptions) {
+                        const value = stockOptions[key];
+                        const button = document.createElement("button");
+                        button.innerText = `Track this product for ${key}`;
+                        button.addEventListener("click", () => {
+                            console.log(key);
+                        });
+                        document.querySelector("#success").appendChild(button);
+                    }
+                }
+                else if (storeType === "size-boxes") {
+                    const sizeBoxesSelector = store.check.selector;
+                    const elements = yield chrome.scripting.executeScript({
+                        target: { tabId: tab.id },
+                        func: sizeBoxesSelector => document.querySelectorAll(sizeBoxesSelector),
+                        args: [sizeBoxesSelector]
+                    });
+                    console.log(elements);
+                    for (const el of (_a = elements[0].result) !== null && _a !== void 0 ? _a : []) {
+                        const button = document.createElement("button");
+                        const upperCaseText = el.innerText.toUpperCase();
+                        const size = SIZE_MAPPINGS[upperCaseText] || upperCaseText;
+                        button.innerText = `Track this size ${size} for this product`;
+                        button.addEventListener("click", () => {
+                            console.log(size);
+                        });
+                        el.appendChild(button);
+                    }
+                }
+                break;
             }
-            break;
-        }
+        });
     }
 }))();
 // TODO: map out all the out of stock queries

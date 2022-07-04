@@ -22,7 +22,11 @@
     "website": "dickssportinggoods.com",
     "img": "[data-cy*=product-image]",
     "name": "h1.title",
-    "price": ".product-price"
+    "price": ".product-price",
+    "type": "size-boxes",
+    "check": {
+      "selector": "button.swatch-disabled"
+    }
   },
   "Olympia Sports": {
     "website": "olympiasports.net",
@@ -42,7 +46,8 @@
     "img": "#productImg",
     "name": "#productTitle",
     "price": "#regular-price-info",
-    "stock": {
+    "type": "stock-text",
+    "check": {
       "pickup": {
         "click": "#wag-pickup-tab",
         "selector": "[id*='Out of Stock']"
