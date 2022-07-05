@@ -9,6 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    const SIZE_MAPPINGS = {
+        "XXXS": "3XSMALL",
+        "XXS": "2XSMALL",
+        "XS": "XSMALL",
+        "S": "SMALL",
+        "M": "MEDIUM",
+        "L": "LARGE",
+        "XL": "XLARGE",
+        "XXL": "2XLARGE",
+        "XXXL": "3XLARGE",
+        "XXXXL": "4XLARGE",
+        "XXXXXL": "5XLARGE",
+        "3XS": "3XSMALL",
+        "2XS": "2XSMALL",
+        "1XS": "XSMALL",
+        "1XL": "XLARGE",
+        "2XL": "2XLARGE",
+        "3XL": "3XLARGE",
+        "4XL": "4XLARGE",
+        "5XL": "5XLARGE"
+    };
     const stores = yield fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
     const [tab] = yield chrome.tabs.query({ active: true, currentWindow: true });
     let canRun = true;
@@ -83,21 +104,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 }
                 else if (storeType === "size-boxes") {
                     const sizeBoxesSelector = store.check.selector;
-                    const elements = yield chrome.scripting.executeScript({
+                    const elementGetter = yield chrome.scripting.executeScript({
                         target: { tabId: tab.id },
-                        func: sizeBoxesSelector => document.querySelectorAll(sizeBoxesSelector),
+                        func: sizeBoxesSelector => {
+                            const elements = document.querySelectorAll(sizeBoxesSelector);
+                            const res = [];
+                            for (const element of elements) {
+                                res.push({
+                                    textContent: element.textContent
+                                });
+                            }
+                            return res;
+                        },
                         args: [sizeBoxesSelector]
                     });
-                    console.log(elements);
-                    for (const el of (_a = elements[0].result) !== null && _a !== void 0 ? _a : []) {
+                    console.log(elementGetter);
+                    for (const el of (_a = elementGetter[0].result) !== null && _a !== void 0 ? _a : []) {
                         const button = document.createElement("button");
-                        const upperCaseText = el.innerText.toUpperCase();
+                        const upperCaseText = el.textContent.toUpperCase();
                         const size = SIZE_MAPPINGS[upperCaseText] || upperCaseText;
-                        button.innerText = `Track this size ${size} for this product`;
+                        button.textContent = `Track this size ${size} for this product`;
                         button.addEventListener("click", () => {
                             console.log(size);
                         });
-                        el.appendChild(button);
+                        document.querySelector("#success").appendChild(button);
                     }
                 }
                 break;
