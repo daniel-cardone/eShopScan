@@ -115,17 +115,26 @@
 
           const elementGetter = await chrome.scripting.executeScript({
             target: { tabId: tab.id! },
-            func: selector => document.querySelectorAll(selector),
+            func: selector =>  [...document.querySelectorAll(selector)].map(el => el.outerHTML),
             args: [value.element]
           });
-
-          console.log(elementGetter); return;
           
-          for (const el of elementGetter![0].result!) {
+          for (const elementString of elementGetter![0].result!) {
+            const el = (new DOMParser()).parseFromString(elementString, "text/html").body.children.item(0)!;
             const option = document.createElement("option");
-            const data = el.getAttribute(value.data)!;
-            option.textContent = data;
-            option.value = data;
+
+            let text = el as any;
+            for (let i = 0; i < value.data.length; i++) {
+              const prop = value.data[i];
+              if (value.args[i] === null) {
+                text = text[prop]!;
+              } else {
+                text = text[prop](...value.args[i]);
+              }
+            }
+
+            option.textContent = text;
+            option.value = text;
             dropdown.appendChild(option);
           }
 

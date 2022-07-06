@@ -28,7 +28,8 @@ interface StockObject {
 
 interface SizeBoxesDetail {
   element: string;
-  data: string;
+  data: string[];
+  args: string[];
 }
 
 interface SizeBoxesObject {

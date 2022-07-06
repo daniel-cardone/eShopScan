@@ -26,12 +26,14 @@
     "type": "size-color-boxes",
     "form": {
       "Size": {
-        "element": "button.swatch-disabled:not([class*=swatch-color])",
-        "data": "textContent"
+        "element": "button.btn-attr-select:not(.swatch-color)",
+        "data": ["textContent"],
+        "args": [null]
       },
       "Color": {
         "element": "button.swatch-color",
-        "data": "alt"
+        "data": ["querySelector", "getAttribute"],
+        "args": [["img"], ["alt"]]
       }
     }
   },

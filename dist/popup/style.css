@@ -50,6 +50,17 @@ button:hover {
   background: #c6d8d7;
 }
 
+select {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.25rem;
+  border: 1px solid #92b4a7;
+  border-radius: 0.5rem;
+  color: #4c86a8;
+  background: #d5e3e2;
+  font-size: 16px;
+}
+
 .loading-ring {
   width: 75px;
   height: 75px;
