@@ -45,13 +45,15 @@ a {
 }
 
 button {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.25rem;
   border: 1px solid $gray;
   border-radius: 0.5rem;
   color: $secondary;
   background: $normal;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 0.5rem;
   &:hover {
     background: darken($normal, 5%);
   }

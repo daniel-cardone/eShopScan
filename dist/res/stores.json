@@ -23,9 +23,16 @@
     "img": "[data-cy*=product-image]",
     "name": "h1.title",
     "price": ".product-price",
-    "type": "size-boxes",
-    "check": {
-      "selector": "button.swatch-disabled"
+    "type": "size-color-boxes",
+    "form": {
+      "Size": {
+        "element": "button.swatch-disabled:not([class*=swatch-color])",
+        "data": "textContent"
+      },
+      "Color": {
+        "element": "button.swatch-color",
+        "data": "alt"
+      }
     }
   },
   "Olympia Sports": {

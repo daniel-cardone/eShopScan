@@ -64,8 +64,8 @@
 
       for (const key in store) {
         if (key === "website") continue;
-        if (key === "check") continue;
         if (key === "type") continue;
+        if (key === "form") continue;
 
         const value = store[key];
         if (!document.querySelector(value)) {
@@ -84,7 +84,7 @@
     url = url.slice(0, url.indexOf("/"));
 
     for (const storeName in stores) {
-      const store = stores[storeName];
+      const store: Store = stores[storeName];
 
       if (url !== store.website) continue;
 
@@ -95,42 +95,44 @@
         for (const key in stockOptions) {
           const value = stockOptions[key];
           const button = document.createElement("button");
-          button.innerText = `Track this product for ${key}`;
+          button.textContent = `Track this product for ${key}`;
           button.addEventListener("click", () => {
             console.log(key);
           });
           document.querySelector("#success")!.appendChild(button);
         }
-      } else if (storeType === "size-boxes") {
-        const sizeBoxesSelector = store.check.selector;
+      } else if (storeType === "size-color-boxes") {
+        const formData = store.form as SizeBoxesObject;
+        const form = document.createElement("form");
 
-        const elementGetter = await chrome.scripting.executeScript({
-          target: { tabId: tab.id! },
-          func: sizeBoxesSelector => {
-            const elements = document.querySelectorAll(sizeBoxesSelector);
-            const res = [];
-            for (const element of elements) {
-              res.push({
-                textContent: element.textContent
-              });
-            }
-            return res;
-          },
-          args: [sizeBoxesSelector]
-        });
+        for (const key in formData) {
+          const value = formData[key];
+          
+          const dropdown = document.createElement("select");
+          dropdown.id = key;
+          dropdown.name = key;
+          dropdown.classList.add("dropdown");
 
-        console.log(elementGetter)
-        
-        for (const el of elementGetter![0].result ?? []) {
-          const button = document.createElement("button");
-          const upperCaseText = el.textContent.toUpperCase();
-          const size = SIZE_MAPPINGS[upperCaseText] || upperCaseText;
-          button.textContent = `Track this size ${size} for this product`;
-          button.addEventListener("click", () => {
-            console.log(size);
+          const elementGetter = await chrome.scripting.executeScript({
+            target: { tabId: tab.id! },
+            func: selector => document.querySelectorAll(selector),
+            args: [value.element]
           });
-          document.querySelector("#success")!.appendChild(button);
+
+          console.log(elementGetter); return;
+          
+          for (const el of elementGetter![0].result!) {
+            const option = document.createElement("option");
+            const data = el.getAttribute(value.data)!;
+            option.textContent = data;
+            option.value = data;
+            dropdown.appendChild(option);
+          }
+
+          form.appendChild(dropdown);
         }
+
+        document.querySelector("#success")!.appendChild(form);
       }
 
       break;

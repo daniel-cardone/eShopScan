@@ -36,13 +36,15 @@ a {
 }
 
 button {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.25rem;
   border: 1px solid #92b4a7;
   border-radius: 0.5rem;
   color: #4c86a8;
   background: #d5e3e2;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 0.5rem;
 }
 button:hover {
   background: #c6d8d7;

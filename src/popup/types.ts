@@ -1,8 +1,20 @@
+interface QueriedElement {
+  type?: string;
+  textContent?: string;
+  value?: string;
+  classList?: string[];
+  id?: string;
+  alt?: string;
+  extra?: {
+    [key: string]: string | string[];
+  }
+}
+
 interface SizeMap {
   [key: string]: string;
 }
 
-type StoreType = 'stock-text' | 'size-boxes';
+type StoreType = 'stock-text' | 'size-boxes' | 'size-color-boxes';
 
 interface StockDetail {
   click: string;
@@ -15,7 +27,8 @@ interface StockObject {
 }
 
 interface SizeBoxesDetail {
-  selector: string;
+  element: string;
+  data: string;
 }
 
 interface SizeBoxesObject {
@@ -29,7 +42,7 @@ interface Store {
   name: string;
   price: string;
   type: StoreType;
-  check: StockObject | SizeBoxesObject;
+  form: StockObject | SizeBoxesObject;
 }
 
 interface StoresObject {

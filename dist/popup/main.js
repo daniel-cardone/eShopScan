@@ -66,9 +66,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             for (const key in store) {
                 if (key === "website")
                     continue;
-                if (key === "check")
-                    continue;
                 if (key === "type")
+                    continue;
+                if (key === "form")
                     continue;
                 const value = store[key];
                 if (!document.querySelector(value)) {
@@ -80,7 +80,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return onStoreSite && hasProduct;
     }
     function createButtons() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let url = tab.url;
             url = url.replace(/(https?:\/\/)?(www.)?/g, "");
@@ -95,40 +94,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                     for (const key in stockOptions) {
                         const value = stockOptions[key];
                         const button = document.createElement("button");
-                        button.innerText = `Track this product for ${key}`;
+                        button.textContent = `Track this product for ${key}`;
                         button.addEventListener("click", () => {
                             console.log(key);
                         });
                         document.querySelector("#success").appendChild(button);
                     }
                 }
-                else if (storeType === "size-boxes") {
-                    const sizeBoxesSelector = store.check.selector;
-                    const elementGetter = yield chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: sizeBoxesSelector => {
-                            const elements = document.querySelectorAll(sizeBoxesSelector);
-                            const res = [];
-                            for (const element of elements) {
-                                res.push({
-                                    textContent: element.textContent
-                                });
-                            }
-                            return res;
-                        },
-                        args: [sizeBoxesSelector]
-                    });
-                    console.log(elementGetter);
-                    for (const el of (_a = elementGetter[0].result) !== null && _a !== void 0 ? _a : []) {
-                        const button = document.createElement("button");
-                        const upperCaseText = el.textContent.toUpperCase();
-                        const size = SIZE_MAPPINGS[upperCaseText] || upperCaseText;
-                        button.textContent = `Track this size ${size} for this product`;
-                        button.addEventListener("click", () => {
-                            console.log(size);
+                else if (storeType === "size-color-boxes") {
+                    const formData = store.form;
+                    const form = document.createElement("form");
+                    for (const key in formData) {
+                        const value = formData[key];
+                        const dropdown = document.createElement("select");
+                        dropdown.id = key;
+                        dropdown.name = key;
+                        dropdown.classList.add("dropdown");
+                        const elementGetter = yield chrome.scripting.executeScript({
+                            target: { tabId: tab.id },
+                            func: selector => document.querySelectorAll(selector),
+                            args: [value.element]
                         });
-                        document.querySelector("#success").appendChild(button);
+                        console.log(elementGetter);
+                        return;
+                        for (const el of elementGetter[0].result) {
+                            const option = document.createElement("option");
+                            const data = el.getAttribute(value.data);
+                            option.textContent = data;
+                            option.value = data;
+                            dropdown.appendChild(option);
+                        }
+                        form.appendChild(dropdown);
                     }
+                    document.querySelector("#success").appendChild(form);
                 }
                 break;
             }
