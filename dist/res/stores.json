@@ -23,17 +23,22 @@
     "img": "[data-cy*=product-image]",
     "name": "h1.title",
     "price": ".product-price",
-    "type": "size-color-boxes",
+    "types": ["Color", "Size", "Width"],
     "form": {
-      "Size": {
-        "element": "button.btn-attr-select:not(.swatch-color)",
-        "data": ["textContent"],
-        "args": [null]
-      },
       "Color": {
         "element": "button.swatch-color",
         "data": ["querySelector", "getAttribute"],
         "args": [["img"], ["alt"]]
+      },
+      "Size": {
+        "element": "div[id*='Size'] button.btn-attr-select",
+        "data": ["textContent"],
+        "args": [null]
+      },
+      "Width": {
+        "element": "div[id*='Width'] button.btn-attr-select",
+        "data": ["textContent"],
+        "args": [null]
       }
     }
   },

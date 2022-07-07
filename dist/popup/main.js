@@ -69,7 +69,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             for (const key in store) {
                 if (key === "website")
                     continue;
-                if (key === "type")
+                if (key === "types")
                     continue;
                 if (key === "form")
                     continue;
@@ -92,64 +92,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const store = stores[storeName];
                 if (url !== store.website)
                     continue;
-                const storeType = store.type;
-                if (storeType === "stock-text") {
-                    const stockOptions = store.check;
-                    for (const key in stockOptions) {
-                        const value = stockOptions[key];
-                        const button = document.createElement("button");
-                        button.textContent = `Track this product for ${key}`;
-                        button.addEventListener("click", () => {
-                            console.log(key);
-                        });
-                        document.querySelector("#success").append(button);
-                    }
-                }
-                else if (storeType === "size-color-boxes") {
-                    const formData = store.form;
-                    const form = document.createElement("form");
-                    for (const key in formData) {
-                        const value = formData[key];
-                        const dropdown = document.createElement("select");
-                        dropdown.id = key;
-                        dropdown.name = key;
-                        dropdown.classList.add("dropdown");
-                        const elementGetter = yield chrome.scripting.executeScript({
-                            target: { tabId: tab.id },
-                            func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-                            args: [value.element]
-                        });
-                        for (const elementString of elementGetter[0].result) {
-                            const el = (new DOMParser()).parseFromString(elementString, "text/html").body.children.item(0);
-                            const option = document.createElement("option");
-                            let text = el;
-                            for (let i = 0; i < value.data.length; i++) {
-                                const prop = value.data[i];
-                                if (value.args[i] === null) {
-                                    text = text[prop];
-                                }
-                                else {
-                                    text = text[prop](...value.args[i]);
-                                }
+                const storeTypes = store.type;
+                const formData = store.form;
+                const form = document.createElement("form");
+                for (const key in formData) {
+                    const value = formData[key];
+                    const dropdown = document.createElement("select");
+                    dropdown.id = key;
+                    dropdown.name = key;
+                    dropdown.classList.add("dropdown");
+                    const elementGetter = yield chrome.scripting.executeScript({
+                        target: { tabId: tab.id },
+                        func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
+                        args: [value.element]
+                    });
+                    for (const elementString of elementGetter[0].result) {
+                        const el = (new DOMParser()).parseFromString(elementString, "text/html").body.children.item(0);
+                        const option = document.createElement("option");
+                        let text = el;
+                        for (let i = 0; i < value.data.length; i++) {
+                            const prop = value.data[i];
+                            if (value.args[i] === null) {
+                                text = text[prop];
                             }
-                            text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
-                            option.textContent = text;
-                            option.value = text;
-                            dropdown.append(option);
+                            else {
+                                text = text[prop](...value.args[i]);
+                            }
                         }
+                        text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
+                        option.textContent = text;
+                        option.value = text;
+                        dropdown.append(option);
+                    }
+                    const container = document.createElement("div");
+                    if (dropdown.children.length > 0) {
                         const label = document.createElement("label");
                         label.textContent = `${key}: `;
                         label.setAttribute("for", key);
-                        const container = document.createElement("div");
                         container.append(label, dropdown);
-                        form.append(container);
                     }
-                    document.querySelector("#success").append(form);
+                    form.append(container);
                 }
+                document.querySelector("#success").append(form);
                 break;
             }
         });
     }
 }))();
 // TODO: map out all the out of stock queries
-// TODO: separate shoe width from size

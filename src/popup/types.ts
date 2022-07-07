@@ -14,7 +14,9 @@ interface SizeMap {
   [key: string]: string;
 }
 
-type StoreType = 'stock-text' | 'size-boxes' | 'size-color-boxes';
+type StoreOption = 'Text' | 'Size' | 'Color' | 'Width';
+
+type StoreType = StoreOption[];
 
 interface StockDetail {
   click: string;
