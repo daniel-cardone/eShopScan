@@ -80,6 +80,11 @@ select {
   text-align: center;
 }
 
+.select-wrapper {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
 label {
   color: #4c86a8;
   margin: 0 0.5rem;

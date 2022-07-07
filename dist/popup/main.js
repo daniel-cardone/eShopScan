@@ -109,43 +109,112 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const itemNameElement = document.createElement("p");
                 itemNameElement.textContent = itemName;
                 form.append(itemNameElement);
-                for (const key in formData) {
-                    const value = formData[key];
-                    const dropdown = document.createElement("select");
-                    dropdown.id = key;
-                    dropdown.name = key;
-                    dropdown.classList.add("dropdown");
-                    const elementGetter = yield chrome.scripting.executeScript({
+                if (Object.keys(formData.general).length > 0) {
+                    const data = formData.general;
+                    const containersGetter = yield chrome.scripting.executeScript({
                         target: { tabId: tab.id },
                         func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-                        args: [value.element]
+                        args: [data.container]
                     });
-                    for (const elementString of elementGetter[0].result) {
-                        const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0);
-                        const option = document.createElement("option");
-                        let text = el;
-                        for (let i = 0; i < value.data.length; i++) {
-                            const prop = value.data[i];
-                            if (value.args[i] === null) {
+                    const containersArray = containersGetter[0].result;
+                    const containers = containersArray.map(el => PARSER.parseFromString(el, "text/html").body.children.item(0));
+                    for (const container of containers) {
+                        const selectWrapper = document.createElement("div");
+                        selectWrapper.classList.add("select-wrapper");
+                        const label = document.createElement("label");
+                        let text = container;
+                        for (let i = 0; i < data.label.func.length; i++) {
+                            const prop = data.label.func[i];
+                            const args = data.label.args[i];
+                            if (args === null) {
                                 text = text[prop];
                             }
                             else {
-                                text = text[prop](...value.args[i]);
+                                text = text[prop](...args);
                             }
                         }
-                        text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
-                        option.textContent = text;
-                        option.value = text;
-                        dropdown.append(option);
+                        const labelsToIgnore = data.label.labelsToIgnore;
+                        if (labelsToIgnore.includes(text))
+                            continue;
+                        let ignore = false;
+                        for (const labelToIgnore of labelsToIgnore) {
+                            if (text.startsWith(labelToIgnore)) {
+                                ignore = true;
+                                break;
+                            }
+                        }
+                        if (ignore)
+                            continue;
+                        label.textContent = `${text}: `;
+                        label.setAttribute("for", text);
+                        selectWrapper.append(label);
+                        const dropdown = document.createElement("select");
+                        dropdown.setAttribute("name", text);
+                        const optionElements = container.querySelectorAll(data.options.query);
+                        for (const el of optionElements) {
+                            let text = el;
+                            for (let i = 0; i < data.options.func.length; i++) {
+                                const prop = data.options.func[i];
+                                const args = data.options.args[i];
+                                if (args === null) {
+                                    text = text[prop];
+                                }
+                                else {
+                                    text = text[prop](...args);
+                                }
+                            }
+                            if (SIZE_MAPPINGS[text.toUpperCase()])
+                                text = SIZE_MAPPINGS[text];
+                            const option = document.createElement("option");
+                            option.textContent = text;
+                            option.value = text;
+                            dropdown.append(option);
+                        }
+                        selectWrapper.append(dropdown);
+                        form.append(selectWrapper);
                     }
-                    const container = document.createElement("div");
-                    if (dropdown.children.length > 0) {
-                        const label = document.createElement("label");
-                        label.textContent = `${key}: `;
-                        label.setAttribute("for", key);
-                        container.append(label, dropdown);
+                }
+                if (Object.keys(formData.extra).length > 0) {
+                    for (const key in formData.extra) {
+                        const data = formData.extra;
+                        const value = data[key];
+                        const dropdown = document.createElement("select");
+                        dropdown.id = key;
+                        dropdown.name = key;
+                        dropdown.classList.add("dropdown");
+                        const elementGetter = yield chrome.scripting.executeScript({
+                            target: { tabId: tab.id },
+                            func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
+                            args: [value.element]
+                        });
+                        for (const elementString of elementGetter[0].result) {
+                            const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0);
+                            const option = document.createElement("option");
+                            let text = el;
+                            for (let i = 0; i < value.data.length; i++) {
+                                const prop = value.data[i];
+                                if (value.args[i] === null) {
+                                    text = text[prop];
+                                }
+                                else {
+                                    text = text[prop](...value.args[i]);
+                                }
+                            }
+                            text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
+                            option.textContent = text;
+                            option.value = text;
+                            dropdown.append(option);
+                        }
+                        const selectWrapper = document.createElement("div");
+                        selectWrapper.classList.add("select-wrapper");
+                        if (dropdown.children.length > 0) {
+                            const label = document.createElement("label");
+                            label.textContent = `${key}: `;
+                            label.setAttribute("for", key);
+                            selectWrapper.append(label, dropdown);
+                        }
+                        form.append(selectWrapper);
                     }
-                    form.append(container);
                 }
                 document.querySelector("#success").append(form);
                 break;

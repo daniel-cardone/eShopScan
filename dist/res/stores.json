@@ -25,25 +25,25 @@
     "price": ".product-price",
     "types": ["Color", "Size", "Width", "Capacity"],
     "form": {
-      "Color": {
-        "element": "button.swatch-color",
-        "data": ["querySelector", "getAttribute"],
-        "args": [["img"], ["alt"]]
+      "general": {
+        "container": "div[id^=attr_]",
+        "label": {
+          "func": ["getAttribute", "split", 1],
+          "args": [["id"], ["_"], null],
+          "labelsToIgnore": ["Color"]
+        },
+        "options": {
+          "query": "button.btn-attr-select",
+          "func": ["textContent"],
+          "args": [null]
+        }
       },
-      "Size": {
-        "element": "div[id*='Size'] button.btn-attr-select",
-        "data": ["textContent"],
-        "args": [null]
-      },
-      "Width": {
-        "element": "div[id*='Width'] button.btn-attr-select",
-        "data": ["textContent"],
-        "args": [null]
-      },
-      "Capacity": {
-        "element": "div[id*='Capacity'] button.btn-attr-select",
-        "data": ["textContent"],
-        "args": [null]
+      "extra": {
+        "Color": {
+          "element": "button.swatch-color",
+          "data": ["querySelector", "getAttribute"],
+          "args": [["img"], ["alt"]]
+        }
       }
     }
   },

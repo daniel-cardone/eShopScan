@@ -95,7 +95,7 @@
       if (url !== store.website) continue;
 
       const storeTypes: StoreType = store.type;
-      const formData = store.form as SizeBoxesObject;
+      const formData = store.form as StoreOptionsObject;
       const form = document.createElement("form");
 
       const heading = document.createElement("h2");
@@ -113,51 +113,126 @@
       itemNameElement.textContent = itemName;
       form.append(itemNameElement);
 
-      for (const key in formData) {
-        const value = formData[key];
-        
-        const dropdown = document.createElement("select");
-        dropdown.id = key;
-        dropdown.name = key;
-        dropdown.classList.add("dropdown");
+      if (Object.keys(formData.general).length > 0) {
+        const data = formData.general as StoreGeneralOptions;
 
-        const elementGetter = await chrome.scripting.executeScript({
+        const containersGetter = await chrome.scripting.executeScript({
           target: { tabId: tab.id! },
-          func: selector =>  [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-          args: [value.element]
+          func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
+          args: [data.container]
         });
-        
-        for (const elementString of elementGetter![0].result!) {
-          const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0)!;
-          const option = document.createElement("option");
 
-          let text = el as any;
-          for (let i = 0; i < value.data.length; i++) {
-            const prop = value.data[i];
-            if (value.args[i] === null) {
+        const containersArray: string[] = containersGetter![0].result!;
+        const containers = containersArray.map(el => PARSER.parseFromString(el, "text/html").body.children.item(0)!);
+
+        for (const container of containers) {
+          const selectWrapper = document.createElement("div");
+          selectWrapper.classList.add("select-wrapper");
+          const label = document.createElement("label");
+          let text = container as any;
+          for (let i = 0; i < data.label.func.length; i++) {
+            const prop = data.label.func[i];
+            const args = data.label.args[i];
+            if (args === null) {
               text = text[prop]!;
             } else {
-              text = text[prop](...value.args[i]);
+              text = text[prop](...args);
             }
           }
 
-          text = SIZE_MAPPINGS[text] ?? text;
+          const labelsToIgnore = data.label.labelsToIgnore;
+          if (labelsToIgnore.includes(text)) continue;
+          let ignore = false;
+          for (const labelToIgnore of labelsToIgnore) {
+            if (text.startsWith(labelToIgnore)) {
+              ignore = true;
+              break;
+            }
+          }
+          if (ignore) continue;
 
-          option.textContent = text;
-          option.value = text;
-          dropdown.append(option);
+          label.textContent = `${text}: `;
+          label.setAttribute("for", text);
+          selectWrapper.append(label);
+
+          const dropdown = document.createElement("select");
+          dropdown.setAttribute("name", text);
+
+          const optionElements = container.querySelectorAll(data.options.query);
+          for (const el of optionElements) {
+            let text = el as any;
+            for (let i = 0; i < data.options.func.length; i++) {
+              const prop = data.options.func[i];
+              const args = data.options.args[i];
+              if (args === null) {
+                text = text[prop]!;
+              } else {
+                text = text[prop](...args);
+              }
+            }
+
+            if (SIZE_MAPPINGS[text.toUpperCase()]) text = SIZE_MAPPINGS[text];
+
+            const option = document.createElement("option");
+            option.textContent = text;
+            option.value = text;
+            dropdown.append(option);
+          }
+
+          selectWrapper.append(dropdown);
+          form.append(selectWrapper);
         }
-        
-        const container = document.createElement("div");
+      }
 
-        if (dropdown.children.length > 0) {
-          const label = document.createElement("label");
-          label.textContent = `${key}: `;
-          label.setAttribute("for", key);
-          container.append(label, dropdown);
+      if (Object.keys(formData.extra).length > 0) {
+        for (const key in formData.extra) {
+          const data = formData.extra as StoreExtraOptions;
+          const value = data[key];
+          
+          const dropdown = document.createElement("select");
+          dropdown.id = key;
+          dropdown.name = key;
+          dropdown.classList.add("dropdown");
+
+          const elementGetter = await chrome.scripting.executeScript({
+            target: { tabId: tab.id! },
+            func: selector =>  [...document.querySelectorAll(selector)].map(el => el.outerHTML),
+            args: [value.element]
+          });
+          
+          for (const elementString of elementGetter![0].result!) {
+            const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0)!;
+            const option = document.createElement("option");
+
+            let text = el as any;
+            for (let i = 0; i < value.data.length; i++) {
+              const prop = value.data[i];
+              if (value.args[i] === null) {
+                text = text[prop]!;
+              } else {
+                text = text[prop](...value.args[i]);
+              }
+            }
+
+            text = SIZE_MAPPINGS[text] ?? text;
+
+            option.textContent = text;
+            option.value = text;
+            dropdown.append(option);
+          }
+          
+          const selectWrapper = document.createElement("div");
+          selectWrapper.classList.add("select-wrapper");
+
+          if (dropdown.children.length > 0) {
+            const label = document.createElement("label");
+            label.textContent = `${key}: `;
+            label.setAttribute("for", key);
+            selectWrapper.append(label, dropdown);
+          }
+
+          form.append(selectWrapper);
         }
-
-        form.append(container);
       }
 
       document.querySelector("#success")!.append(form);

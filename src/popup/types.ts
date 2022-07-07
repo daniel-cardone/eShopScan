@@ -28,14 +28,38 @@ interface StockObject {
   [key: string]: StockDetail;
 }
 
-interface SizeBoxesDetail {
+interface FunctionMaker {
+  func: string[];
+  args: Array<string[] | null>;
+}
+
+interface StoreGeneralOptionsLabel extends FunctionMaker {
+  labelsToIgnore: string[];
+}
+
+interface StoreGeneralOptionsOptions extends FunctionMaker {
+  query: string;
+}
+
+interface StoreGeneralOptions {
+  container: string;
+  label: StoreGeneralOptionsLabel;
+  options: StoreGeneralOptionsOptions;
+}
+
+interface StoreExtraOptionsDetail {
   element: string;
   data: string[];
   args: string[];
 }
 
-interface SizeBoxesObject {
-  [key: string]: SizeBoxesDetail;
+interface StoreExtraOptions {
+  [key: string]: StoreExtraOptionsDetail;
+}
+
+interface StoreOptionsObject {
+  general: StoreGeneralOptions | object;
+  extra: StoreExtraOptions | object;
 }
 
 interface Store {
@@ -45,7 +69,7 @@ interface Store {
   name: string;
   price: string;
   type: StoreType;
-  form: StockObject | SizeBoxesObject;
+  form: StockObject | StoreOptionsObject;
 }
 
 interface StoresObject {
