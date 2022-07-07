@@ -51,7 +51,6 @@ button:hover {
 }
 
 select {
-  display: block;
   margin: 0.5rem auto;
   padding: 0.25rem;
   border: 1px solid #92b4a7;
@@ -60,6 +59,11 @@ select {
   background: #d5e3e2;
   font-size: 16px;
   text-align: center;
+}
+
+label {
+  color: #4c86a8;
+  margin: 0 0.5rem;
 }
 
 .loading-ring {

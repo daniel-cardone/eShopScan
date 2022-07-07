@@ -102,7 +102,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                         button.addEventListener("click", () => {
                             console.log(key);
                         });
-                        document.querySelector("#success").appendChild(button);
+                        document.querySelector("#success").append(button);
                     }
                 }
                 else if (storeType === "size-color-boxes") {
@@ -135,11 +135,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                             text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
                             option.textContent = text;
                             option.value = text;
-                            dropdown.appendChild(option);
+                            dropdown.append(option);
                         }
-                        form.appendChild(dropdown);
+                        const label = document.createElement("label");
+                        label.textContent = `${key}: `;
+                        label.setAttribute("for", key);
+                        const container = document.createElement("div");
+                        container.append(label, dropdown);
+                        form.append(container);
                     }
-                    document.querySelector("#success").appendChild(form);
+                    document.querySelector("#success").append(form);
                 }
                 break;
             }
@@ -147,3 +152,4 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
 }))();
 // TODO: map out all the out of stock queries
+// TODO: separate shoe width from size

@@ -103,7 +103,7 @@
           button.addEventListener("click", () => {
             console.log(key);
           });
-          document.querySelector("#success")!.appendChild(button);
+          document.querySelector("#success")!.append(button);
         }
       } else if (storeType === "size-color-boxes") {
         const formData = store.form as SizeBoxesObject;
@@ -141,13 +141,20 @@
 
             option.textContent = text;
             option.value = text;
-            dropdown.appendChild(option);
+            dropdown.append(option);
           }
 
-          form.appendChild(dropdown);
+          const label = document.createElement("label");
+          label.textContent = `${key}: `;
+          label.setAttribute("for", key);
+
+          const container = document.createElement("div");
+          container.append(label, dropdown);
+
+          form.append(container);
         }
 
-        document.querySelector("#success")!.appendChild(form);
+        document.querySelector("#success")!.append(form);
       }
 
       break;
@@ -157,3 +164,5 @@
 })();
 
 // TODO: map out all the out of stock queries
+
+// TODO: separate shoe width from size

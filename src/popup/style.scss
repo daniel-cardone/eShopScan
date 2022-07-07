@@ -60,7 +60,6 @@ button {
 }
 
 select {
-  display: block;
   margin: 0.5rem auto;
   padding: 0.25rem;
   border: 1px solid $gray;
@@ -69,6 +68,11 @@ select {
   background: $normal;
   font-size: 16px;
   text-align: center;
+}
+
+label {
+  color: $secondary;
+  margin: 0 0.5rem;
 }
 
 .loading-ring {
