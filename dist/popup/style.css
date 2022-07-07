@@ -59,6 +59,7 @@ select {
   color: #4c86a8;
   background: #d5e3e2;
   font-size: 16px;
+  text-align: center;
 }
 
 .loading-ring {

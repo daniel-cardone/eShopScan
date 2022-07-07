@@ -10,25 +10,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const SIZE_MAPPINGS = {
-        "XXXS": "3XSMALL",
-        "XXS": "2XSMALL",
-        "XS": "XSMALL",
-        "S": "SMALL",
-        "M": "MEDIUM",
-        "L": "LARGE",
-        "XL": "XLARGE",
-        "XXL": "2XLARGE",
-        "XXXL": "3XLARGE",
-        "XXXXL": "4XLARGE",
-        "XXXXXL": "5XLARGE",
-        "3XS": "3XSMALL",
-        "2XS": "2XSMALL",
-        "1XS": "XSMALL",
-        "1XL": "XLARGE",
-        "2XL": "2XLARGE",
-        "3XL": "3XLARGE",
-        "4XL": "4XLARGE",
-        "5XL": "5XLARGE"
+        "XXXS": "3X Small",
+        "XXS": "2X Small",
+        "XS": "Extra Small",
+        "S": "Small",
+        "M": "Medium",
+        "L": "Large",
+        "XL": "Extra Large",
+        "XXL": "2X Large",
+        "XXXL": "3X Large",
+        "XXXXL": "4X Large",
+        "XXXXXL": "5X Large",
+        "3XS": "3X Small",
+        "2XS": "2X Small",
+        "1XS": "Extra Small",
+        "1XL": "Extra Large",
+        "2XL": "2X Large",
+        "3XL": "3X Large",
+        "4XL": "4X Large",
+        "5XL": "5X Large"
     };
     const stores = yield fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
     const [tab] = yield chrome.tabs.query({ active: true, currentWindow: true });
@@ -41,8 +41,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         .catch(_ => {
         canRun = false;
     });
-    if (!canRun)
+    if (!canRun) {
+        document.querySelector("#failure").classList.remove("hidden");
+        document.querySelector("#loading").classList.add("hidden");
         return;
+    }
     const found = script[0].result;
     if (found) {
         document.querySelector("#success").classList.remove("hidden");
@@ -80,6 +83,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return onStoreSite && hasProduct;
     }
     function createButtons() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let url = tab.url;
             url = url.replace(/(https?:\/\/)?(www.)?/g, "");
@@ -128,6 +132,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                                     text = text[prop](...value.args[i]);
                                 }
                             }
+                            text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
                             option.textContent = text;
                             option.value = text;
                             dropdown.appendChild(option);

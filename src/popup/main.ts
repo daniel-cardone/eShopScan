@@ -1,25 +1,25 @@
 (async () => {
 
   const SIZE_MAPPINGS: SizeMap = {
-    "XXXS": "3XSMALL",
-    "XXS": "2XSMALL",
-    "XS": "XSMALL",
-    "S": "SMALL",
-    "M": "MEDIUM",
-    "L": "LARGE",
-    "XL": "XLARGE",
-    "XXL": "2XLARGE",
-    "XXXL": "3XLARGE",
-    "XXXXL": "4XLARGE",
-    "XXXXXL": "5XLARGE",
-    "3XS": "3XSMALL",
-    "2XS": "2XSMALL",
-    "1XS": "XSMALL",
-    "1XL": "XLARGE",
-    "2XL": "2XLARGE",
-    "3XL": "3XLARGE",
-    "4XL": "4XLARGE",
-    "5XL": "5XLARGE"
+    "XXXS": "3X Small",
+    "XXS": "2X Small",
+    "XS": "Extra Small",
+    "S": "Small",
+    "M": "Medium",
+    "L": "Large",
+    "XL": "Extra Large",
+    "XXL": "2X Large",
+    "XXXL": "3X Large",
+    "XXXXL": "4X Large",
+    "XXXXXL": "5X Large",
+    "3XS": "3X Small",
+    "2XS": "2X Small",
+    "1XS": "Extra Small",
+    "1XL": "Extra Large",
+    "2XL": "2X Large",
+    "3XL": "3X Large",
+    "4XL": "4X Large",
+    "5XL": "5X Large"
   };
 
   const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
@@ -34,7 +34,11 @@
   .catch(_ => {
     canRun = false;
   });
-  if (!canRun) return;
+  if (!canRun) {
+    document.querySelector("#failure")!.classList.remove("hidden");
+    document.querySelector("#loading")!.classList.add("hidden");
+    return;
+  }
   
   const found = script![0].result!;
 
@@ -46,7 +50,7 @@
   }
   document.querySelector("#loading")!.classList.add("hidden");
 
-
+  
   
   function checkForProduct(stores: StoresObject) {
     let url = window.location.href;
@@ -132,6 +136,8 @@
                 text = text[prop](...value.args[i]);
               }
             }
+
+            text = SIZE_MAPPINGS[text] ?? text;
 
             option.textContent = text;
             option.value = text;
