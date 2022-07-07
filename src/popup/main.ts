@@ -22,6 +22,8 @@
     "5XL": "5X Large"
   };
 
+  const PARSER = new DOMParser();
+
   const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -96,6 +98,21 @@
       const formData = store.form as SizeBoxesObject;
       const form = document.createElement("form");
 
+      const heading = document.createElement("h2");
+      heading.textContent = "Track an Item:";
+      form.append(heading);
+
+      const productNameGetter = await chrome.scripting.executeScript({
+        target: { tabId: tab.id! },
+        func: selector =>  document.querySelector(selector)!.outerHTML,
+        args: [store.name]
+      });
+      const itemNameString = productNameGetter![0].result!;
+      const itemName = PARSER.parseFromString(itemNameString, "text/html").body.children.item(0)!.textContent;
+      const itemNameElement = document.createElement("p");
+      itemNameElement.textContent = itemName;
+      form.append(itemNameElement);
+
       for (const key in formData) {
         const value = formData[key];
         
@@ -111,7 +128,7 @@
         });
         
         for (const elementString of elementGetter![0].result!) {
-          const el = (new DOMParser()).parseFromString(elementString, "text/html").body.children.item(0)!;
+          const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0)!;
           const option = document.createElement("option");
 
           let text = el as any;
@@ -152,3 +169,5 @@
 })();
 
 // TODO: map out all the out of stock queries
+
+// TODO: more product types

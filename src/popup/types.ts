@@ -14,7 +14,7 @@ interface SizeMap {
   [key: string]: string;
 }
 
-type StoreOption = 'Text' | 'Size' | 'Color' | 'Width';
+type StoreOption = 'Text' | 'Size' | 'Color' | 'Width' | 'Capacity';
 
 type StoreType = StoreOption[];
 
