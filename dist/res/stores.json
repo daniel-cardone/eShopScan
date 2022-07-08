@@ -81,7 +81,18 @@
     "img": ".product-image img",
     "name": ".product-info__product-name",
     "price": ".bfx-price",
-    "stock": {}
+    "form": {
+      "general": {
+        "container": "div.VariantTileContainer",
+        "label": {
+          "func": [],
+          "args": [],
+          "labelsToIgnore": []
+        },
+        "options": {}
+      },
+      "extra": {}
+    }
   },
   "Michaels": {
     "website": "michaels.com",
