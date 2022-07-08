@@ -70,8 +70,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             for (const key in store) {
                 if (key === "website")
                     continue;
-                if (key === "types")
-                    continue;
                 if (key === "form")
                     continue;
                 const value = store[key];
@@ -93,7 +91,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const store = stores[storeName];
                 if (url !== store.website)
                     continue;
-                const storeTypes = store.type;
                 const formData = store.form;
                 const form = document.createElement("form");
                 const heading = document.createElement("h2");

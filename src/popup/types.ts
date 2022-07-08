@@ -68,7 +68,6 @@ interface Store {
   img: string;
   name: string;
   price: string;
-  type: StoreType;
   form: StockObject | StoreOptionsObject;
 }
 

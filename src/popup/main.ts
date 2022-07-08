@@ -70,7 +70,6 @@
 
       for (const key in store) {
         if (key === "website") continue;
-        if (key === "types") continue;
         if (key === "form") continue;
 
         const value = store[key];
@@ -94,7 +93,6 @@
 
       if (url !== store.website) continue;
 
-      const storeTypes: StoreType = store.type;
       const formData = store.form as StoreOptionsObject;
       const form = document.createElement("form");
 

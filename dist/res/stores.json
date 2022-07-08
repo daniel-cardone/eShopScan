@@ -23,7 +23,6 @@
     "img": "[data-cy*=product-image]",
     "name": "h1.title",
     "price": ".product-price",
-    "types": ["Color", "Size", "Width", "Capacity"],
     "form": {
       "general": {
         "container": "div[id^=attr_]",
@@ -65,7 +64,6 @@
     "img": "#productImg",
     "name": "#productTitle",
     "price": "#regular-price-info",
-    "type": "stock-text",
     "check": {
       "pickup": {
         "click": "#wag-pickup-tab",
