@@ -31,6 +31,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         "5XL": "5X Large"
     };
     const PARSER = new DOMParser();
+    function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
+        var _a;
+        let ignore = false;
+        for (const labelToIgnore of labelsToIgnore) {
+            if (labelToIgnore.type === "label-has-text") {
+                if (text === null || text === void 0 ? void 0 : text.includes(labelToIgnore.rule)) {
+                    ignore = true;
+                    break;
+                }
+            }
+            else if (labelToIgnore.type === "parent-has-text") {
+                if ((_a = container.textContent) === null || _a === void 0 ? void 0 : _a.includes(labelToIgnore.rule)) {
+                    ignore = true;
+                    break;
+                }
+            }
+            else if (labelToIgnore.type === "label-equals-text") {
+                if (text === labelToIgnore.rule) {
+                    ignore = true;
+                    break;
+                }
+            }
+            else if (labelToIgnore.type === "parent-equals-text") {
+                if (container.textContent === labelToIgnore.rule) {
+                    ignore = true;
+                    break;
+                }
+            }
+            else if (labelToIgnore.type === "label-matches-selector") {
+                if (label.matches(labelToIgnore.rule)) {
+                    ignore = true;
+                    break;
+                }
+            }
+            else if (labelToIgnore.type === "parent-matches-selector") {
+                if (container.matches(labelToIgnore.rule)) {
+                    ignore = true;
+                    break;
+                }
+            }
+        }
+        return ignore;
+    }
     const stores = yield fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
     const [tab] = yield chrome.tabs.query({ active: true, currentWindow: true });
     let canRun = true;
@@ -110,8 +153,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                     const data = formData.general;
                     const containersGetter = yield chrome.scripting.executeScript({
                         target: { tabId: tab.id },
-                        func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-                        args: [data.container]
+                        func: (selector, parents) => {
+                            return [...document.querySelectorAll(selector)].map(el => {
+                                for (let i = 0; i < parents; i++) {
+                                    el = el.parentElement;
+                                }
+                                return el.outerHTML;
+                            });
+                        },
+                        args: [data.container, data.parents]
                     });
                     const containersArray = containersGetter[0].result;
                     const containers = containersArray.map(el => PARSER.parseFromString(el, "text/html").body.children.item(0));
@@ -131,16 +181,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                             }
                         }
                         const labelsToIgnore = data.label.labelsToIgnore;
-                        if (labelsToIgnore.includes(text))
-                            continue;
-                        let ignore = false;
-                        for (const labelToIgnore of labelsToIgnore) {
-                            if (text.startsWith(labelToIgnore)) {
-                                ignore = true;
-                                break;
-                            }
-                        }
-                        if (ignore)
+                        if (shouldIgnoreLabel(labelsToIgnore, text, label, container))
                             continue;
                         label.textContent = `${text}: `;
                         label.setAttribute("for", text);

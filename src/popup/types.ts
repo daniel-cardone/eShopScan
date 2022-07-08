@@ -33,8 +33,13 @@ interface FunctionMaker {
   args: Array<string[] | null>;
 }
 
+interface IgnoredLabel {
+  type: 'label-has-text' | 'parent-has-text' | 'label-equals-text' | 'parent-equals-text' | 'label-matches-selector' | 'parent-matches-selector';
+  rule: string;
+}
+
 interface StoreGeneralOptionsLabel extends FunctionMaker {
-  labelsToIgnore: string[];
+  labelsToIgnore: IgnoredLabel[];
 }
 
 interface StoreGeneralOptionsOptions extends FunctionMaker {
@@ -43,6 +48,7 @@ interface StoreGeneralOptionsOptions extends FunctionMaker {
 
 interface StoreGeneralOptions {
   container: string;
+  parents: number;
   label: StoreGeneralOptionsLabel;
   options: StoreGeneralOptionsOptions;
 }

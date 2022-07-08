@@ -24,6 +24,45 @@
 
   const PARSER = new DOMParser();
 
+  function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Element, container: Element) {
+    let ignore = false;
+    for (const labelToIgnore of labelsToIgnore) {
+      if (labelToIgnore.type === "label-has-text") {
+        if (text?.includes(labelToIgnore.rule)) {
+          ignore = true;
+          break;
+        }
+      } else if (labelToIgnore.type === "parent-has-text") {
+        if (container.textContent?.includes(labelToIgnore.rule)) {
+          ignore = true;
+          break;
+        }
+      } else if (labelToIgnore.type === "label-equals-text") {
+        if (text === labelToIgnore.rule) {
+          ignore = true;
+          break;
+        }
+      } else if (labelToIgnore.type === "parent-equals-text") {
+        if (container.textContent === labelToIgnore.rule) {
+          ignore = true;
+          break;
+        }
+      } else if (labelToIgnore.type === "label-matches-selector") {
+        if (label.matches(labelToIgnore.rule)) {
+          ignore = true;
+          break;
+        }
+      } else if (labelToIgnore.type === "parent-matches-selector") {
+        if (container.matches(labelToIgnore.rule)) {
+          ignore = true;
+          break;
+        }
+      }
+    }
+
+    return ignore;
+  }
+
   const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -116,8 +155,15 @@
 
         const containersGetter = await chrome.scripting.executeScript({
           target: { tabId: tab.id! },
-          func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-          args: [data.container]
+          func: (selector: string, parents: number) => {
+            return [...document.querySelectorAll(selector)].map(el => {
+              for (let i = 0; i < parents; i++) {
+                el = el.parentElement!;
+              }
+              return el.outerHTML;
+            });
+          },
+          args: [data.container, data.parents]
         });
 
         const containersArray: string[] = containersGetter![0].result!;
@@ -139,15 +185,7 @@
           }
 
           const labelsToIgnore = data.label.labelsToIgnore;
-          if (labelsToIgnore.includes(text)) continue;
-          let ignore = false;
-          for (const labelToIgnore of labelsToIgnore) {
-            if (text.startsWith(labelToIgnore)) {
-              ignore = true;
-              break;
-            }
-          }
-          if (ignore) continue;
+          if (shouldIgnoreLabel(labelsToIgnore, text, label, container)) continue;
 
           label.textContent = `${text}: `;
           label.setAttribute("for", text);

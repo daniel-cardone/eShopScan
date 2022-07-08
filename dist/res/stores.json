@@ -26,10 +26,16 @@
     "form": {
       "general": {
         "container": "div[id^=attr_]",
+        "parents": 0,
         "label": {
           "func": ["getAttribute", "split", 1],
           "args": [["id"], ["_"], null],
-          "labelsToIgnore": ["Color"]
+          "labelsToIgnore": [
+            {
+              "type": "label-has-text",
+              "rule": "Color"
+            }
+          ]
         },
         "options": {
           "query": "button.btn-attr-select",
@@ -84,14 +90,44 @@
     "form": {
       "general": {
         "container": "div.VariantTileContainer",
+        "parents": 1,
         "label": {
-          "func": [],
-          "args": [],
-          "labelsToIgnore": []
+          "func": ["querySelector", "textContent", "replace"],
+          "args": [["label"], null, [":", ""]],
+          "labelsToIgnore": [
+            {
+              "type": "parent-matches-selector",
+              "rule": "[style*='none']"
+            },
+            {
+              "type": "parent-has-text",
+              "rule": "Size"
+            }
+          ]
         },
-        "options": {}
+        "options": {
+          "query": ".VariantTile",
+          "func": ["textContent"],
+          "args": [null]
+        }
       },
-      "extra": {}
+      "extra": {
+        "Color": {
+          "element": "img.product-color-image--thumbnail",
+          "data": ["alt"],
+          "args": [null]
+        },
+        "Size": {
+          "element": ".VariantLabel ~ span ~ .VariantTileContainer:first-of-type a",
+          "data": ["textContent"],
+          "args": [null]
+        },
+        "Width": {
+          "element": "label.VariantLabel:nth-of-type(2) ~ .VariantTileContainer a",
+          "data": ["textContent"],
+          "args": [null]
+        }
+      }
     }
   },
   "Michaels": {
