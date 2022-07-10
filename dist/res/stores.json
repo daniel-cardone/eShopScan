@@ -16,7 +16,30 @@
     "website": "nike.com",
     "img": "picture img",
     "name": "#pdp_product_title",
-    "price": ".product-price"
+    "price": ".product-price",
+    "form": {
+      "general": {
+        "container": "fieldset:not(.colorway-images)",
+        "parents": 0,
+        "label": {
+          "func": ["querySelector", "textContent", "split", 1],
+          "args": [["span"], null, [" "], null],
+          "labelsToIgnore": []
+        },
+        "options": {
+          "query": "label",
+          "func": ["textContent"],
+          "args": [null]
+        }
+      },
+      "extra": {
+        "Color": {
+          "element": "fieldset.colorway-images img",
+          "data": ["getAttribute"],
+          "args": [["alt"]]
+        }
+      }
+    }
   },
   "Dick's Sporting Goods": {
     "website": "dickssportinggoods.com",

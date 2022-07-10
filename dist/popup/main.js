@@ -31,6 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         "5XL": "5X Large"
     };
     const PARSER = new DOMParser();
+    function getSizeMappedText(text) {
+        return text.split(" ").map((el) => { var _a; return (_a = SIZE_MAPPINGS[el]) !== null && _a !== void 0 ? _a : el; }).join(" ");
+    }
     function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
         var _a;
         let ignore = false;
@@ -125,7 +128,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return onStoreSite && hasProduct;
     }
     function createButtons() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let url = tab.url;
             url = url.replace(/(https?:\/\/)?(www.)?/g, "");
@@ -201,8 +203,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                                     text = text[prop](...args);
                                 }
                             }
-                            if (SIZE_MAPPINGS[text.toUpperCase()])
-                                text = SIZE_MAPPINGS[text];
+                            text = getSizeMappedText(text);
                             const option = document.createElement("option");
                             option.textContent = text;
                             option.value = text;
@@ -238,7 +239,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                                     text = text[prop](...value.args[i]);
                                 }
                             }
-                            text = (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
+                            text = getSizeMappedText(text);
                             option.textContent = text;
                             option.value = text;
                             dropdown.append(option);
@@ -260,5 +261,4 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         });
     }
 }))();
-// TODO: map out all the out of stock queries
-// TODO: more product types
+// TODO: map out all the websites (fix famousfootwear)

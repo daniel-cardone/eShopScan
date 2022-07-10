@@ -24,6 +24,10 @@
 
   const PARSER = new DOMParser();
 
+  function getSizeMappedText(text: string) {
+    return text.split(" ").map((el: string) => SIZE_MAPPINGS[el] ?? el).join(" ");
+  }
+
   function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Element, container: Element) {
     let ignore = false;
     for (const labelToIgnore of labelsToIgnore) {
@@ -207,7 +211,7 @@
               }
             }
 
-            if (SIZE_MAPPINGS[text.toUpperCase()]) text = SIZE_MAPPINGS[text];
+            text = getSizeMappedText(text);
 
             const option = document.createElement("option");
             option.textContent = text;
@@ -250,7 +254,7 @@
               }
             }
 
-            text = SIZE_MAPPINGS[text] ?? text;
+            text = getSizeMappedText(text);
 
             option.textContent = text;
             option.value = text;
@@ -279,6 +283,4 @@
   
 })();
 
-// TODO: map out all the out of stock queries
-
-// TODO: more product types
+// TODO: map out all the websites (fix famousfootwear)
