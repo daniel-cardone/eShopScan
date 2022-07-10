@@ -32,7 +32,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     };
     const PARSER = new DOMParser();
     function getSizeMappedText(text) {
-        return text.split(" ").map((el) => { var _a; return (_a = SIZE_MAPPINGS[el]) !== null && _a !== void 0 ? _a : el; }).join(" ");
+        var _a;
+        return (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
     }
     function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
         var _a;

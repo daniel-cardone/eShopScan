@@ -25,7 +25,7 @@
   const PARSER = new DOMParser();
 
   function getSizeMappedText(text: string) {
-    return text.split(" ").map((el: string) => SIZE_MAPPINGS[el] ?? el).join(" ");
+    return SIZE_MAPPINGS[text] ?? text;
   }
 
   function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Element, container: Element) {
