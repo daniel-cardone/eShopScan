@@ -4,11 +4,32 @@
     "img": "#landingImage",
     "name": "#productTitle",
     "price": ".a-offscreen",
-    "stock": {
-      "shipping": {
-        "selector": "#availability",
-        "text": "n stock",
-        "default": true
+    "form": {
+      "general": {
+        "container": "div[id^=variation_]",
+        "parents": 0,
+        "label": {
+          "func": ["querySelector", "textContent", "replace", "trim"],
+          "args": [["label"], null, [":", ""], []],
+          "labelsToIgnore": [
+            {
+              "type": "label-has-text",
+              "rule": "Color"
+            }
+          ]
+        },
+        "options": {
+          "query": "option:not(:first-child), button",
+          "func": ["textContent", "trim"],
+          "args": [null, []]
+        }
+      },
+      "extra": {
+        "Color": {
+          "element": "div[id^=variation_color] img",
+          "data": ["getAttribute"],
+          "args": [["alt"]]
+        }
       }
     }
   },

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 html, body {
-  width: 400px;
-  height: 600px;
+  width: 500px;
+  height: 500px;
   margin: 0;
   padding: 0;
   background: #e4edec;
@@ -97,6 +97,10 @@ label {
   border-left: 2px solid #92b4a7;
   border-radius: 50%;
   animation: spin 2s infinite linear;
+}
+
+#viewAllContainer {
+  margin-top: 0.75rem;
 }
 
 .hidden {

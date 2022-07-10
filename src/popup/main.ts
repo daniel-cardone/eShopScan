@@ -283,4 +283,8 @@
   
 })();
 
-// TODO: map out all the websites (fix famousfootwear)
+// TODO: map out all the websites
+
+// TODO: fix famousfootwear
+
+// TODO: add to amazon, remove price per unit in the options
