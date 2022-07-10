@@ -101,6 +101,9 @@
     let url = window.location.href;
     url = url.replace(/(https?:\/\/)?(www.)?/g, "");
     url = url.slice(0, url.indexOf("/"));
+    let urlParts = url.split(".").reverse();
+    urlParts.length = 2;
+    url = urlParts.reverse().join(".");
 
     let onStoreSite = false;
     let hasProduct = true;
@@ -121,6 +124,7 @@
           break;
         }
       }
+      break;
     }
 
     return onStoreSite && hasProduct;
