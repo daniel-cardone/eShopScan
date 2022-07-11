@@ -20,8 +20,13 @@
         },
         "options": {
           "query": "option:not(:first-child), button",
-          "func": ["textContent", "trim"],
-          "args": [null, []]
+          "func": ["textContent", "split", 0, "trim"],
+          "args": [null, ["$"], null, []],
+          "fallback": {
+            "query": ".imgSwatch",
+            "func": ["getAttribute"],
+            "args": [["alt"]]
+          }
         }
       },
       "extra": {

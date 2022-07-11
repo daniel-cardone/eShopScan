@@ -203,7 +203,9 @@
           dropdown.setAttribute("name", text);
 
           const optionElements = container.querySelectorAll(data.options.query);
-          for (const el of optionElements) {
+          const fallbackElements = data.options.fallback ? container.querySelectorAll(data.options.fallback.query) : null;
+          for (let i = 0; i < optionElements.length; i++) {
+            let el = optionElements.item(i);
             let text = el as any;
             for (let i = 0; i < data.options.func.length; i++) {
               const prop = data.options.func[i];
@@ -212,6 +214,21 @@
                 text = text[prop]!;
               } else {
                 text = text[prop](...args);
+              }
+            }
+
+            if (text === "" && fallbackElements !== null) {
+              el = fallbackElements.item(i);
+              text = el as any;
+              for (let i = 0; i < data.options.fallback!.func.length; i++) {
+                const prop = data.options.fallback!.func[i];
+                const args = data.options.fallback!.args[i];
+                console.log(text, prop, args)
+                if (args === null) {
+                  text = text[prop]!;
+                } else {
+                  text = text[prop](...args);
+                }
               }
             }
 
@@ -289,6 +306,6 @@
 
 // TODO: map out all the websites
 
-// TODO: add to amazon, remove price per unit in the options
+// TODO: more amazon testing
 
 // TODO: wait until page is fully loaded

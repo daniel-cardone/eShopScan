@@ -44,6 +44,7 @@ interface StoreGeneralOptionsLabel extends FunctionMaker {
 
 interface StoreGeneralOptionsOptions extends FunctionMaker {
   query: string;
+  fallback?: StoreGeneralOptionsOptions;
 }
 
 interface StoreGeneralOptions {
