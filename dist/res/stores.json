@@ -206,6 +206,33 @@
     "img": "img[id*=zoom]",
     "name": ".product-name",
     "price": ".product-sales-price",
-    "stock": {}
+    "form": {
+      "general": {
+        "container": "div.product-variations li.attribute",
+        "parents": 0,
+        "label": {
+          "func": ["querySelector", "textContent", "split", 0],
+          "args": [["h3"], null, [":"], null],
+          "labelsToIgnore": [
+            {
+              "type": "label-has-text",
+              "rule": "Color"
+            }
+          ]
+        },
+        "options": {
+          "query": "a",
+          "func": ["textContent", "trim"],
+          "args": [null, []]
+        }
+      },
+      "extra": {
+        "Color": {
+          "element": "ul.Color img",
+          "func": ["getAttribute"],
+          "args": [["title"]]
+        }
+      }
+    }
   }
 }
