@@ -205,13 +205,18 @@
           "func": ["alt"],
           "args": [null]
         },
+        "Age Group": {
+          "query": ".VariantLabel ~ span ~ .VariantTileContainer:nth-last-of-type(3) a",
+          "func": ["textContent"],
+          "args": [null]
+        },
         "Size": {
-          "query": ".VariantLabel ~ span ~ .VariantTileContainer:first-of-type a",
+          "query": ".VariantLabel ~ span ~ .VariantTileContainer:nth-last-of-type(2) a",
           "func": ["textContent"],
           "args": [null]
         },
         "Width": {
-          "query": "label.VariantLabel:nth-of-type(2) ~ .VariantTileContainer a",
+          "query": "label.VariantLabel:last-of-type ~ .VariantTileContainer a",
           "func": ["textContent"],
           "args": [null]
         }

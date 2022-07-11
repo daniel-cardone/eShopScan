@@ -289,8 +289,6 @@
 
 // TODO: map out all the websites
 
-// TODO: fix famousfootwear
-
 // TODO: add to amazon, remove price per unit in the options
 
 // TODO: wait until page is fully loaded
