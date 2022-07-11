@@ -54,7 +54,7 @@ interface StoreGeneralOptions {
 }
 
 interface StoreExtraOptionsDetail {
-  element: string;
+  query: string;
   func: string[];
   args: string[];
 }

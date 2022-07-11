@@ -229,7 +229,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                         const elementGetter = yield chrome.scripting.executeScript({
                             target: { tabId: tab.id },
                             func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-                            args: [value.element]
+                            args: [value.query]
                         });
                         for (const elementString of elementGetter[0].result) {
                             const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0);

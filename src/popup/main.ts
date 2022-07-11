@@ -241,7 +241,7 @@
           const elementGetter = await chrome.scripting.executeScript({
             target: { tabId: tab.id! },
             func: selector =>  [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-            args: [value.element]
+            args: [value.query]
           });
           
           for (const elementString of elementGetter![0].result!) {

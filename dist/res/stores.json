@@ -26,7 +26,7 @@
       },
       "extra": {
         "Color": {
-          "element": "div[id^=variation_color] img",
+          "query": "div[id^=variation_color] img",
           "func": ["getAttribute"],
           "args": [["alt"]]
         }
@@ -55,7 +55,7 @@
       },
       "extra": {
         "Color": {
-          "element": "fieldset.colorway-images img",
+          "query": "fieldset.colorway-images img",
           "func": ["getAttribute"],
           "args": [["alt"]]
         }
@@ -89,7 +89,7 @@
       },
       "extra": {
         "Color": {
-          "element": "button.swatch-color",
+          "query": "button.swatch-color",
           "func": ["querySelector", "getAttribute"],
           "args": [["img"], ["alt"]]
         }
@@ -129,7 +129,7 @@
       },
       "extra": {
         "Color": {
-          "element": "#variantType-color li",
+          "query": "#variantType-color li",
           "func": ["dataset", "id", "replaceAll"],
           "args": [null, null, ["&amp;", "&"]]
         }
@@ -141,15 +141,32 @@
     "img": "#productImg",
     "name": "#productTitle",
     "price": "#regular-price-info",
-    "check": {
-      "pickup": {
-        "click": "#wag-pickup-tab",
-        "selector": "[id*='Out of Stock']"
+    "form": {
+      "general": {
+        "container": "[id^=prod-][id$=-swatch]",
+        "parents": 0,
+        "label": {
+          "func": ["getAttribute", "split", 1],
+          "args": [["id"], ["-"], null],
+          "labelsToIgnore": [
+            {
+              "type": "label-has-text",
+              "rule": "color"
+            }
+          ]
+        },
+        "options": {
+          "query": "li",
+          "func": ["textContent"],
+          "args": [null]
+        }
       },
-      "shipping": {
-        "click": "#wag-shipping-tab",
-        "selector": ".wag-shipping-inner-content",
-        "default": true
+      "extra": {
+        "Color": {
+          "query": "#prod-color-swatch li a",
+          "func": ["getAttribute"],
+          "args": [["title"]]
+        }
       }
     }
   },
@@ -184,17 +201,17 @@
       },
       "extra": {
         "Color": {
-          "element": "img.product-color-image--thumbnail",
+          "query": "img.product-color-image--thumbnail",
           "func": ["alt"],
           "args": [null]
         },
         "Size": {
-          "element": ".VariantLabel ~ span ~ .VariantTileContainer:first-of-type a",
+          "query": ".VariantLabel ~ span ~ .VariantTileContainer:first-of-type a",
           "func": ["textContent"],
           "args": [null]
         },
         "Width": {
-          "element": "label.VariantLabel:nth-of-type(2) ~ .VariantTileContainer a",
+          "query": "label.VariantLabel:nth-of-type(2) ~ .VariantTileContainer a",
           "func": ["textContent"],
           "args": [null]
         }
@@ -228,7 +245,7 @@
       },
       "extra": {
         "Color": {
-          "element": "ul.Color img",
+          "query": "ul.Color img",
           "func": ["getAttribute"],
           "args": [["title"]]
         }
