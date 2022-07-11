@@ -55,7 +55,7 @@ interface StoreGeneralOptions {
 
 interface StoreExtraOptionsDetail {
   element: string;
-  data: string[];
+  func: string[];
   args: string[];
 }
 

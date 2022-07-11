@@ -88,6 +88,7 @@ select {
 label {
   color: #4c86a8;
   margin: 0 0.5rem;
+  text-transform: capitalize;
 }
 
 .loading-ring {

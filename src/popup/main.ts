@@ -249,8 +249,8 @@
             const option = document.createElement("option");
 
             let text = el as any;
-            for (let i = 0; i < value.data.length; i++) {
-              const prop = value.data[i];
+            for (let i = 0; i < value.func.length; i++) {
+              const prop = value.func[i];
               if (value.args[i] === null) {
                 text = text[prop]!;
               } else {
@@ -292,3 +292,5 @@
 // TODO: fix famousfootwear
 
 // TODO: add to amazon, remove price per unit in the options
+
+// TODO: wait until page is fully loaded

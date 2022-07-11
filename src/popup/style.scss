@@ -97,6 +97,7 @@ select {
 label {
   color: $secondary;
   margin: 0 0.5rem;
+  text-transform: capitalize;
 }
 
 .loading-ring {

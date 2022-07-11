@@ -27,7 +27,7 @@
       "extra": {
         "Color": {
           "element": "div[id^=variation_color] img",
-          "data": ["getAttribute"],
+          "func": ["getAttribute"],
           "args": [["alt"]]
         }
       }
@@ -56,7 +56,7 @@
       "extra": {
         "Color": {
           "element": "fieldset.colorway-images img",
-          "data": ["getAttribute"],
+          "func": ["getAttribute"],
           "args": [["alt"]]
         }
       }
@@ -90,7 +90,7 @@
       "extra": {
         "Color": {
           "element": "button.swatch-color",
-          "data": ["querySelector", "getAttribute"],
+          "func": ["querySelector", "getAttribute"],
           "args": [["img"], ["alt"]]
         }
       }
@@ -104,10 +104,37 @@
   },
   "Big Lots": {
     "website": "biglots.com",
-    "img": "#resolve_1",
+    "img": "[id^=resolve_]",
     "name": ".product-name h1",
     "price": ".regular-price",
-    "stock": ".out-of-stock-msg"
+    "form": {
+      "general": {
+        "container": "div[id^=variantType-]",
+        "parents": 0,
+        "label": {
+          "func": ["querySelector", "textContent", "split", 0],
+          "args": [[".type--label"], null, [":"], null],
+          "labelsToIgnore": [
+            {
+              "type": "label-has-text",
+              "rule": "color"
+            }
+          ]
+        },
+        "options": {
+          "query": "li",
+          "func": ["textContent"],
+          "args": [null]
+        }
+      },
+      "extra": {
+        "Color": {
+          "element": "#variantType-color li",
+          "func": ["dataset", "id", "replaceAll"],
+          "args": [null, null, ["&amp;", "&"]]
+        }
+      }
+    }
   },
   "Walgreens": {
     "website": "walgreens.com",
@@ -158,17 +185,17 @@
       "extra": {
         "Color": {
           "element": "img.product-color-image--thumbnail",
-          "data": ["alt"],
+          "func": ["alt"],
           "args": [null]
         },
         "Size": {
           "element": ".VariantLabel ~ span ~ .VariantTileContainer:first-of-type a",
-          "data": ["textContent"],
+          "func": ["textContent"],
           "args": [null]
         },
         "Width": {
           "element": "label.VariantLabel:nth-of-type(2) ~ .VariantTileContainer a",
-          "data": ["textContent"],
+          "func": ["textContent"],
           "args": [null]
         }
       }
