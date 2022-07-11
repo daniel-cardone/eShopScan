@@ -1,14 +1,5 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-(() => __awaiter(void 0, void 0, void 0, function* () {
+(async () => {
     const SIZE_MAPPINGS = {
         "XXXS": "3X Small",
         "XXS": "2X Small",
@@ -78,10 +69,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
         return ignore;
     }
-    const stores = yield fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
-    const [tab] = yield chrome.tabs.query({ active: true, currentWindow: true });
+    const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     let canRun = true;
-    const script = yield chrome.scripting.executeScript({
+    const script = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: checkForProduct,
         args: [stores]
@@ -103,7 +94,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         document.querySelector("#failure").classList.remove("hidden");
     }
     document.querySelector("#loading").classList.add("hidden");
-    function checkForProduct(stores) {
+    async function checkForProduct(stores) {
+        while (document.readyState !== "complete") {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
         let url = window.location.href;
         url = url.replace(/(https?:\/\/)?(www.)?/g, "");
         url = url.slice(0, url.indexOf("/"));
@@ -132,54 +126,76 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
         return onStoreSite && hasProduct;
     }
-    function createButtons() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let url = tab.url;
-            url = url.replace(/(https?:\/\/)?(www.)?/g, "");
-            url = url.slice(0, url.indexOf("/"));
-            for (const storeName in stores) {
-                const store = stores[storeName];
-                if (url !== store.website)
-                    continue;
-                const formData = store.form;
-                const form = document.createElement("form");
-                const heading = document.createElement("h2");
-                heading.textContent = "Track an Item:";
-                form.append(heading);
-                const productNameGetter = yield chrome.scripting.executeScript({
+    async function createButtons() {
+        let url = tab.url;
+        url = url.replace(/(https?:\/\/)?(www.)?/g, "");
+        url = url.slice(0, url.indexOf("/"));
+        for (const storeName in stores) {
+            const store = stores[storeName];
+            if (url !== store.website)
+                continue;
+            const formData = store.form;
+            const form = document.createElement("form");
+            const heading = document.createElement("h2");
+            heading.textContent = "Track an Item:";
+            form.append(heading);
+            const productNameGetter = await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                func: selector => document.querySelector(selector).outerHTML,
+                args: [store.name]
+            });
+            const itemNameString = productNameGetter[0].result;
+            const itemName = PARSER.parseFromString(itemNameString, "text/html").body.children.item(0).textContent;
+            const itemNameElement = document.createElement("p");
+            itemNameElement.textContent = itemName;
+            form.append(itemNameElement);
+            if (Object.keys(formData.general).length > 0) {
+                const data = formData.general;
+                const containersGetter = await chrome.scripting.executeScript({
                     target: { tabId: tab.id },
-                    func: selector => document.querySelector(selector).outerHTML,
-                    args: [store.name]
+                    func: (selector, parents) => {
+                        return [...document.querySelectorAll(selector)].map(el => {
+                            for (let i = 0; i < parents; i++) {
+                                el = el.parentElement;
+                            }
+                            return el.outerHTML;
+                        });
+                    },
+                    args: [data.container, data.parents]
                 });
-                const itemNameString = productNameGetter[0].result;
-                const itemName = PARSER.parseFromString(itemNameString, "text/html").body.children.item(0).textContent;
-                const itemNameElement = document.createElement("p");
-                itemNameElement.textContent = itemName;
-                form.append(itemNameElement);
-                if (Object.keys(formData.general).length > 0) {
-                    const data = formData.general;
-                    const containersGetter = yield chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: (selector, parents) => {
-                            return [...document.querySelectorAll(selector)].map(el => {
-                                for (let i = 0; i < parents; i++) {
-                                    el = el.parentElement;
-                                }
-                                return el.outerHTML;
-                            });
-                        },
-                        args: [data.container, data.parents]
-                    });
-                    const containersArray = containersGetter[0].result;
-                    const containers = containersArray.map(el => PARSER.parseFromString(el, "text/html").body.children.item(0));
-                    for (const container of containers) {
-                        const selectWrapper = document.createElement("div");
-                        selectWrapper.classList.add("select-wrapper");
-                        const label = document.createElement("label");
-                        let text = container;
-                        for (let i = 0; i < data.label.func.length; i++) {
-                            const prop = data.label.func[i];
-                            const args = data.label.args[i];
+                const containersArray = containersGetter[0].result;
+                const containers = containersArray.map(el => PARSER.parseFromString(el, "text/html").body.children.item(0));
+                for (const container of containers) {
+                    const selectWrapper = document.createElement("div");
+                    selectWrapper.classList.add("select-wrapper");
+                    const label = document.createElement("label");
+                    let text = container;
+                    for (let i = 0; i < data.label.func.length; i++) {
+                        const prop = data.label.func[i];
+                        const args = data.label.args[i];
+                        if (args === null) {
+                            text = text[prop];
+                        }
+                        else {
+                            text = text[prop](...args);
+                        }
+                    }
+                    const labelsToIgnore = data.label.labelsToIgnore;
+                    if (shouldIgnoreLabel(labelsToIgnore, text, label, container))
+                        continue;
+                    label.textContent = `${text}: `;
+                    label.setAttribute("for", text);
+                    selectWrapper.append(label);
+                    const dropdown = document.createElement("select");
+                    dropdown.setAttribute("name", text);
+                    const optionElements = container.querySelectorAll(data.options.query);
+                    const fallbackElements = data.options.fallback ? container.querySelectorAll(data.options.fallback.query) : null;
+                    for (let i = 0; i < optionElements.length; i++) {
+                        let el = optionElements.item(i);
+                        let text = el;
+                        for (let i = 0; i < data.options.func.length; i++) {
+                            const prop = data.options.func[i];
+                            const args = data.options.args[i];
                             if (args === null) {
                                 text = text[prop];
                             }
@@ -187,22 +203,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                                 text = text[prop](...args);
                             }
                         }
-                        const labelsToIgnore = data.label.labelsToIgnore;
-                        if (shouldIgnoreLabel(labelsToIgnore, text, label, container))
-                            continue;
-                        label.textContent = `${text}: `;
-                        label.setAttribute("for", text);
-                        selectWrapper.append(label);
-                        const dropdown = document.createElement("select");
-                        dropdown.setAttribute("name", text);
-                        const optionElements = container.querySelectorAll(data.options.query);
-                        const fallbackElements = data.options.fallback ? container.querySelectorAll(data.options.fallback.query) : null;
-                        for (let i = 0; i < optionElements.length; i++) {
-                            let el = optionElements.item(i);
-                            let text = el;
-                            for (let i = 0; i < data.options.func.length; i++) {
-                                const prop = data.options.func[i];
-                                const args = data.options.args[i];
+                        if (text === "" && fallbackElements !== null) {
+                            el = fallbackElements.item(i);
+                            text = el;
+                            for (let i = 0; i < data.options.fallback.func.length; i++) {
+                                const prop = data.options.fallback.func[i];
+                                const args = data.options.fallback.args[i];
+                                console.log(text, prop, args);
                                 if (args === null) {
                                     text = text[prop];
                                 }
@@ -210,79 +217,63 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                                     text = text[prop](...args);
                                 }
                             }
-                            if (text === "" && fallbackElements !== null) {
-                                el = fallbackElements.item(i);
-                                text = el;
-                                for (let i = 0; i < data.options.fallback.func.length; i++) {
-                                    const prop = data.options.fallback.func[i];
-                                    const args = data.options.fallback.args[i];
-                                    console.log(text, prop, args);
-                                    if (args === null) {
-                                        text = text[prop];
-                                    }
-                                    else {
-                                        text = text[prop](...args);
-                                    }
-                                }
-                            }
-                            text = getSizeMappedText(text);
-                            const option = document.createElement("option");
-                            option.textContent = text;
-                            option.value = text;
-                            dropdown.append(option);
                         }
-                        selectWrapper.append(dropdown);
-                        form.append(selectWrapper);
+                        text = getSizeMappedText(text);
+                        const option = document.createElement("option");
+                        option.textContent = text;
+                        option.value = text;
+                        dropdown.append(option);
                     }
+                    selectWrapper.append(dropdown);
+                    form.append(selectWrapper);
                 }
-                if (Object.keys(formData.extra).length > 0) {
-                    for (const key in formData.extra) {
-                        const data = formData.extra;
-                        const value = data[key];
-                        const dropdown = document.createElement("select");
-                        dropdown.id = key;
-                        dropdown.name = key;
-                        dropdown.classList.add("dropdown");
-                        const elementGetter = yield chrome.scripting.executeScript({
-                            target: { tabId: tab.id },
-                            func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
-                            args: [value.query]
-                        });
-                        for (const elementString of elementGetter[0].result) {
-                            const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0);
-                            const option = document.createElement("option");
-                            let text = el;
-                            for (let i = 0; i < value.func.length; i++) {
-                                const prop = value.func[i];
-                                if (value.args[i] === null) {
-                                    text = text[prop];
-                                }
-                                else {
-                                    text = text[prop](...value.args[i]);
-                                }
-                            }
-                            text = getSizeMappedText(text);
-                            option.textContent = text;
-                            option.value = text;
-                            dropdown.append(option);
-                        }
-                        const selectWrapper = document.createElement("div");
-                        selectWrapper.classList.add("select-wrapper");
-                        if (dropdown.children.length > 0) {
-                            const label = document.createElement("label");
-                            label.textContent = `${key}: `;
-                            label.setAttribute("for", key);
-                            selectWrapper.append(label, dropdown);
-                        }
-                        form.append(selectWrapper);
-                    }
-                }
-                document.querySelector("#success").append(form);
-                break;
             }
-        });
+            if (Object.keys(formData.extra).length > 0) {
+                for (const key in formData.extra) {
+                    const data = formData.extra;
+                    const value = data[key];
+                    const dropdown = document.createElement("select");
+                    dropdown.id = key;
+                    dropdown.name = key;
+                    dropdown.classList.add("dropdown");
+                    const elementGetter = await chrome.scripting.executeScript({
+                        target: { tabId: tab.id },
+                        func: selector => [...document.querySelectorAll(selector)].map(el => el.outerHTML),
+                        args: [value.query]
+                    });
+                    for (const elementString of elementGetter[0].result) {
+                        const el = PARSER.parseFromString(elementString, "text/html").body.children.item(0);
+                        const option = document.createElement("option");
+                        let text = el;
+                        for (let i = 0; i < value.func.length; i++) {
+                            const prop = value.func[i];
+                            if (value.args[i] === null) {
+                                text = text[prop];
+                            }
+                            else {
+                                text = text[prop](...value.args[i]);
+                            }
+                        }
+                        text = getSizeMappedText(text);
+                        option.textContent = text;
+                        option.value = text;
+                        dropdown.append(option);
+                    }
+                    const selectWrapper = document.createElement("div");
+                    selectWrapper.classList.add("select-wrapper");
+                    if (dropdown.children.length > 0) {
+                        const label = document.createElement("label");
+                        label.textContent = `${key}: `;
+                        label.setAttribute("for", key);
+                        selectWrapper.append(label, dropdown);
+                    }
+                    form.append(selectWrapper);
+                }
+            }
+            document.querySelector("#success").append(form);
+            break;
+        }
     }
-}))();
+})();
 // TODO: map out all the websites
 // TODO: more amazon testing
-// TODO: wait until page is fully loaded

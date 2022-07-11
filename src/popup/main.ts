@@ -97,7 +97,11 @@
 
   
   
-  function checkForProduct(stores: StoresObject) {
+  async function checkForProduct(stores: StoresObject) {
+    while (document.readyState !== "complete") {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
     let url = window.location.href;
     url = url.replace(/(https?:\/\/)?(www.)?/g, "");
     url = url.slice(0, url.indexOf("/"));
@@ -307,5 +311,3 @@
 // TODO: map out all the websites
 
 // TODO: more amazon testing
-
-// TODO: wait until page is fully loaded
