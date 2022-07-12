@@ -1,5 +1,12 @@
 "use strict";
 (async () => {
+    let id = (await chrome.storage.sync.get("id")).id;
+    if (id) {
+        console.log(id);
+    }
+    else {
+        chrome.storage.sync.set({ "id": crypto.randomUUID() });
+    }
     const SIZE_MAPPINGS = {
         "XXXS": "3X Small",
         "XXS": "2X Small",
