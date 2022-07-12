@@ -4,7 +4,7 @@
   "version": "1.0",
   "minimum_chrome_version": "92",
   "manifest_version": 3,
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["identity", "identity.email", "storage", "activeTab", "scripting"],
   "action": {
     "default_popup": "/popup/popup.html",
     "default_icon": {

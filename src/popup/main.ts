@@ -1,11 +1,17 @@
-(async () => {
+let id = null;
+chrome.identity.getProfileUserInfo(res => {
+  id = res.id
 
-  let id = (await chrome.storage.sync.get("id")).id;
-  if (id) {
-    console.log(id);
+  if (!id) {
+    document.querySelector("#noID")!.classList.remove("hidden");
+    document.querySelector("#loading")!.classList.add("hidden");
+    document.querySelector("#viewAllContainer")!.classList.add("hidden");
   } else {
-    chrome.storage.sync.set({"id": crypto.randomUUID()});
+    main();
   }
+});
+
+async function main() {
 
   const SIZE_MAPPINGS: SizeMap = {
     "XXXS": "3X Small",
@@ -313,7 +319,7 @@
     }
   }
   
-})();
+};
 
 // TODO: map out all the websites
 
