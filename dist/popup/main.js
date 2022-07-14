@@ -1,4 +1,73 @@
 "use strict";
+const SIZE_MAPPINGS = {
+    "XXXS": "3X Small",
+    "XXS": "2X Small",
+    "XS": "Extra Small",
+    "S": "Small",
+    "M": "Medium",
+    "L": "Large",
+    "XL": "Extra Large",
+    "XXL": "2X Large",
+    "XXXL": "3X Large",
+    "XXXXL": "4X Large",
+    "XXXXXL": "5X Large",
+    "3XS": "3X Small",
+    "2XS": "2X Small",
+    "1XS": "Extra Small",
+    "1XL": "Extra Large",
+    "2XL": "2X Large",
+    "3XL": "3X Large",
+    "4XL": "4X Large",
+    "5XL": "5X Large"
+};
+const PARSER = new DOMParser();
+function getSizeMappedText(text) {
+    var _a;
+    return (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
+}
+function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
+    var _a;
+    let ignore = false;
+    for (const labelToIgnore of labelsToIgnore) {
+        if (labelToIgnore.type === "label-has-text") {
+            if (text === null || text === void 0 ? void 0 : text.includes(labelToIgnore.rule)) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "parent-has-text") {
+            if ((_a = container.textContent) === null || _a === void 0 ? void 0 : _a.includes(labelToIgnore.rule)) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "label-equals-text") {
+            if (text === labelToIgnore.rule) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "parent-equals-text") {
+            if (container.textContent === labelToIgnore.rule) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "label-matches-selector") {
+            if (label.matches(labelToIgnore.rule)) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "parent-matches-selector") {
+            if (container.matches(labelToIgnore.rule)) {
+                ignore = true;
+                break;
+            }
+        }
+    }
+    return ignore;
+}
 let id = null;
 chrome.identity.getProfileUserInfo(res => {
     id = res.id;
@@ -12,75 +81,6 @@ chrome.identity.getProfileUserInfo(res => {
     }
 });
 async function main() {
-    const SIZE_MAPPINGS = {
-        "XXXS": "3X Small",
-        "XXS": "2X Small",
-        "XS": "Extra Small",
-        "S": "Small",
-        "M": "Medium",
-        "L": "Large",
-        "XL": "Extra Large",
-        "XXL": "2X Large",
-        "XXXL": "3X Large",
-        "XXXXL": "4X Large",
-        "XXXXXL": "5X Large",
-        "3XS": "3X Small",
-        "2XS": "2X Small",
-        "1XS": "Extra Small",
-        "1XL": "Extra Large",
-        "2XL": "2X Large",
-        "3XL": "3X Large",
-        "4XL": "4X Large",
-        "5XL": "5X Large"
-    };
-    const PARSER = new DOMParser();
-    function getSizeMappedText(text) {
-        var _a;
-        return (_a = SIZE_MAPPINGS[text]) !== null && _a !== void 0 ? _a : text;
-    }
-    function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
-        var _a;
-        let ignore = false;
-        for (const labelToIgnore of labelsToIgnore) {
-            if (labelToIgnore.type === "label-has-text") {
-                if (text === null || text === void 0 ? void 0 : text.includes(labelToIgnore.rule)) {
-                    ignore = true;
-                    break;
-                }
-            }
-            else if (labelToIgnore.type === "parent-has-text") {
-                if ((_a = container.textContent) === null || _a === void 0 ? void 0 : _a.includes(labelToIgnore.rule)) {
-                    ignore = true;
-                    break;
-                }
-            }
-            else if (labelToIgnore.type === "label-equals-text") {
-                if (text === labelToIgnore.rule) {
-                    ignore = true;
-                    break;
-                }
-            }
-            else if (labelToIgnore.type === "parent-equals-text") {
-                if (container.textContent === labelToIgnore.rule) {
-                    ignore = true;
-                    break;
-                }
-            }
-            else if (labelToIgnore.type === "label-matches-selector") {
-                if (label.matches(labelToIgnore.rule)) {
-                    ignore = true;
-                    break;
-                }
-            }
-            else if (labelToIgnore.type === "parent-matches-selector") {
-                if (container.matches(labelToIgnore.rule)) {
-                    ignore = true;
-                    break;
-                }
-            }
-        }
-        return ignore;
-    }
     const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     let canRun = true;
@@ -283,6 +283,28 @@ async function main() {
                 }
             }
             document.querySelector("#success").append(form);
+            const submitButton = document.createElement("button");
+            submitButton.textContent = "Track";
+            submitButton.addEventListener("click", () => {
+                const formData = new FormData(document.querySelector("form"));
+                const data = {};
+                for (const key of formData.keys()) {
+                    data[key] = formData.get(key);
+                }
+                console.log(data);
+                fetch("http://localhost:8000/test", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                    console.log(data);
+                });
+            });
+            document.querySelector("#success").append(submitButton);
             break;
         }
     }

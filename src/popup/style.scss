@@ -66,15 +66,15 @@ a {
 button {
   display: block;
   margin: 0.5rem auto;
-  padding: 0.25rem;
-  border: 1px solid $gray;
+  padding: 0.25rem 1rem;
+  border: 1px solid $primary;
   border-radius: 0.5rem;
-  color: $secondary;
-  background: $normal;
+  color: $primary;
+  background: lighten($primary, 40%);
   font-size: 16px;
   cursor: pointer;
   &:hover {
-    background: darken($normal, 5%);
+    background: lighten($primary, 30%);
   }
 }
 
