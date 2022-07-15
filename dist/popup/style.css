@@ -87,6 +87,7 @@ select {
   background: #d5e3e2;
   font-size: 16px;
   text-align: center;
+  text-transform: capitalize;
 }
 
 .select-wrapper {
