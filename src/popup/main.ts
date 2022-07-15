@@ -1,3 +1,10 @@
+const URLS = {
+  stores: "http://localhost:8000/stores",
+  userdata: "http://localhost:8000/userdata",
+  track: "http://localhost:8000/track",
+  untrack: "http://localhost:8000/untrack"
+};
+
 const SIZE_MAPPINGS: SizeMap = {
   "XXXS": "3X Small",
   "XXS": "2X Small",
@@ -80,8 +87,8 @@ chrome.identity.getProfileUserInfo(res => {
 
 async function main() {
 
-  const stores = await fetch(chrome.runtime.getURL("../res/stores.json")).then(res => res.json());
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const stores = await fetch(URLS.stores).then(res => res.json()).catch(err => {});
 
   let canRun = true;
   const script = await chrome.scripting.executeScript({
@@ -328,7 +335,7 @@ async function main() {
           data.formData[key] = formData.get(key)!.toString();
         }
 
-        fetch("http://localhost:8000/track", {
+        fetch(URLS.track, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -345,7 +352,7 @@ async function main() {
       const untrackButton = document.createElement("button");
       untrackButton.textContent = "Untrack";
       untrackButton.addEventListener("click", () => {
-        fetch("http://localhost:8000/untrack", {
+        fetch(URLS.untrack, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
