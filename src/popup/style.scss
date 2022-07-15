@@ -64,17 +64,26 @@ a {
 }
 
 button {
-  display: block;
-  margin: 0.5rem auto;
+  margin: 0.5rem 0.5rem;
   padding: 0.25rem 1rem;
-  border: 1px solid $primary;
   border-radius: 0.5rem;
-  color: $primary;
-  background: lighten($primary, 40%);
   font-size: 16px;
   cursor: pointer;
-  &:hover {
-    background: lighten($primary, 30%);
+  &:first-of-type {
+    color: $secondary;
+    border: 1px solid $secondary;
+    background: lighten($secondary, 35%);
+    &:hover {
+      background: lighten($secondary, 25%);
+    }
+  }
+  &:last-of-type {
+    color: $primary;
+    border: 1px solid $primary;
+    background: lighten($primary, 40%);
+    &:hover {
+      background: lighten($primary, 30%);
+    }
   }
 }
 

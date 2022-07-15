@@ -81,3 +81,11 @@ interface Store {
 interface StoresObject {
   [key: string]: Store;
 }
+
+interface TrackRequest {
+  productURL: string;
+  userID: string;
+  formData: {
+    [key: string]: string;
+  };
+}

@@ -55,17 +55,26 @@ a {
 }
 
 button {
-  display: block;
-  margin: 0.5rem auto;
+  margin: 0.5rem 0.5rem;
   padding: 0.25rem 1rem;
-  border: 1px solid #db2955;
   border-radius: 0.5rem;
-  color: #db2955;
-  background: #f8d8e0;
   font-size: 16px;
   cursor: pointer;
 }
-button:hover {
+button:first-of-type {
+  color: #4c86a8;
+  border: 1px solid #4c86a8;
+  background: #c3d8e4;
+}
+button:first-of-type:hover {
+  background: #a0c1d4;
+}
+button:last-of-type {
+  color: #db2955;
+  border: 1px solid #db2955;
+  background: #f8d8e0;
+}
+button:last-of-type:hover {
   background: #f1acbd;
 }
 

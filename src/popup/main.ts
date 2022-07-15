@@ -65,9 +65,9 @@ function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Ele
   return ignore;
 }
 
-let id = null;
+let id: string | null = null;
 chrome.identity.getProfileUserInfo(res => {
-  id = res.id
+  id = res.id;
 
   if (!id) {
     document.querySelector("#noID")!.classList.remove("hidden");
@@ -315,17 +315,20 @@ async function main() {
 
       document.querySelector("#success")!.append(form);
 
-      const submitButton = document.createElement("button");
-      submitButton.textContent = "Track";
-      submitButton.addEventListener("click", () => {
+      const trackButton = document.createElement("button");
+      trackButton.textContent = "Track";
+      trackButton.addEventListener("click", () => {
         const formData = new FormData(document.querySelector("form")!);
-        const data: any = {};
+        const data: TrackRequest = {
+          productURL: tab.url!,
+          userID: id!,
+          formData: {}
+        };
         for (const key of formData.keys()) {
-          data[key] = formData.get(key);
+          data.formData[key] = formData.get(key)!.toString();
         }
-        console.log(data);
 
-        fetch("http://localhost:8000/test", {
+        fetch("http://localhost:8000/track", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -334,10 +337,27 @@ async function main() {
         })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
+          console.log(`Tracked!`);
         });
       });
-      document.querySelector("#success")!.append(submitButton);
+      document.querySelector("#success")!.append(trackButton);
+
+      const untrackButton = document.createElement("button");
+      untrackButton.textContent = "Untrack";
+      untrackButton.addEventListener("click", () => {
+        fetch("http://localhost:8000/untrack", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ productURL: tab.url!, userID: id! })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(`Untracked!`);
+        });
+      });
+      document.querySelector("#success")!.append(untrackButton);
 
       break;
     }
@@ -348,3 +368,5 @@ async function main() {
 // TODO: map out all the websites
 
 // TODO: more amazon testing
+
+// TODO: move db to backend
