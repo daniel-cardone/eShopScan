@@ -352,10 +352,10 @@ async function main() {
           },
           body: JSON.stringify(data)
         })
-        .then(res => res.json())
         .then(data => {
           console.log(`Tracked!`);
-        });
+        })
+        .catch(console.log);
       });
       document.querySelector("#success")!.append(trackButton);
 
@@ -369,10 +369,10 @@ async function main() {
           },
           body: JSON.stringify({ productURL: tab.url!, userID: id! })
         })
-        .then(res => res.json())
         .then(data => {
           console.log(`Untracked!`);
-        });
+        })
+        .catch(console.log);
       });
       document.querySelector("#success")!.append(untrackButton);
 
@@ -386,4 +386,4 @@ async function main() {
 
 // TODO: more amazon testing
 
-// TODO: move db to backend
+// TODO: animation for success from backend, fix fetch catching
