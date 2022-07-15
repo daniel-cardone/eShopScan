@@ -66,6 +66,16 @@ function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Ele
         ignore = true;
         break;
       }
+    } else if (labelToIgnore.type === "label-has-selector") {
+      if (label.querySelector(labelToIgnore.rule) !== null) {
+        ignore = true;
+        break;
+      }
+    } else if (labelToIgnore.type === "parent-has-selector") {
+      if (container.querySelector(labelToIgnore.rule) !== null) {
+        ignore = true;
+        break;
+      }
     }
   }
 

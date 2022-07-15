@@ -71,6 +71,18 @@ function shouldIgnoreLabel(labelsToIgnore, text, label, container) {
                 break;
             }
         }
+        else if (labelToIgnore.type === "label-has-selector") {
+            if (label.querySelector(labelToIgnore.rule) !== null) {
+                ignore = true;
+                break;
+            }
+        }
+        else if (labelToIgnore.type === "parent-has-selector") {
+            if (container.querySelector(labelToIgnore.rule) !== null) {
+                ignore = true;
+                break;
+            }
+        }
     }
     return ignore;
 }

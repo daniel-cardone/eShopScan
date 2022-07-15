@@ -34,7 +34,7 @@ interface FunctionMaker {
 }
 
 interface IgnoredLabel {
-  type: 'label-has-text' | 'parent-has-text' | 'label-equals-text' | 'parent-equals-text' | 'label-matches-selector' | 'parent-matches-selector';
+  type: 'label-has-text' | 'parent-has-text' | 'label-equals-text' | 'parent-equals-text' | 'label-matches-selector' | 'parent-matches-selector' | 'label-has-selector' | 'parent-has-selector';
   rule: string;
 }
 
