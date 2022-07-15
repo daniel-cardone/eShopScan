@@ -33,6 +33,15 @@ function getSizeMappedText(text: string) {
   return SIZE_MAPPINGS[text] ?? text;
 }
 
+function sliceURL(url: string) {
+  url = url.replace(/(https?:\/\/)?(www.)?/g, "");
+  url = url.slice(0, url.indexOf("/"));
+  let urlParts = url.split(".").reverse();
+  urlParts.length = 2;
+  url = urlParts.reverse().join(".");
+  return url;
+}
+
 function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Element, container: Element) {
   let ignore = false;
   for (const labelToIgnore of labelsToIgnore) {
@@ -104,7 +113,7 @@ async function main() {
   const script = await chrome.scripting.executeScript({
     target: { tabId: tab.id! },
     func: checkForProduct,
-    args: [stores]
+    args: [stores, sliceURL(tab.url!)]
   })
   .catch(_ => {
     canRun = false;
@@ -127,17 +136,10 @@ async function main() {
 
   
   
-  async function checkForProduct(stores: StoresObject) {
+  async function checkForProduct(stores: StoresObject, url: string) {
     while (document.readyState !== "complete") {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-
-    let url = window.location.href;
-    url = url.replace(/(https?:\/\/)?(www.)?/g, "");
-    url = url.slice(0, url.indexOf("/"));
-    let urlParts = url.split(".").reverse();
-    urlParts.length = 2;
-    url = urlParts.reverse().join(".");
 
     let onStoreSite = false;
     let hasProduct = true;
@@ -165,15 +167,13 @@ async function main() {
   }
 
   async function createButtons() {
-    let url = tab.url!;
-    url = url.replace(/(https?:\/\/)?(www.)?/g, "");
-    url = url.slice(0, url.indexOf("/"));
+    const url = sliceURL(tab.url!);
 
     for (const storeName in stores) {
       const store: Store = stores[storeName];
-
+      
       if (url !== store.website) continue;
-
+      
       const formData = store.form as StoreOptionsObject;
       const form = document.createElement("form");
 
