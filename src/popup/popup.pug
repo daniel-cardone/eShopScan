@@ -18,6 +18,19 @@ html(lang="en")
         h2.err Could not find a product on this page
       #noID.hidden
         h2.err Your account was not found. Please make sure you are running Chrome browser while logged in with sync enabled.
+      #processingRequest.hidden
+        h2 Processing request..
+        p (this should take a minute or less)
+        .loading-ring
+      #goodRequest.hidden
+        #goodRequestCircle
+        h2#requestResultText
+      #badRequest.hidden
+        #badRequestCircle
+        h2.err Your request was not processed. Please try again.
+        p.err Error information:
+        p
+          pre#errorInfo.err
       div#viewAllContainer
         a(href="../page/index.html" target="_blank") View all tracked products
     script(type="module", src="main.js")

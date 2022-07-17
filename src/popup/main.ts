@@ -335,6 +335,8 @@ async function main() {
       const trackButton = document.createElement("button");
       trackButton.textContent = "Track";
       trackButton.addEventListener("click", () => {
+        document.querySelector("#success")!.remove();
+        document.querySelector("#processingRequest")!.classList.remove("hidden");
         const formData = new FormData(document.querySelector("form")!);
         const data: TrackRequest = {
           productURL: tab.url!,
@@ -352,16 +354,21 @@ async function main() {
           },
           body: JSON.stringify(data)
         })
-        .then(data => {
-          console.log(`Tracked!`);
+        .then(res => {
+          if (!res.ok) {
+            return res.text().then(text => { throw new Error(text) });
+          }
+          finishUp(0);
         })
-        .catch(console.log);
+        .catch(trackingError);
       });
       document.querySelector("#success")!.append(trackButton);
 
       const untrackButton = document.createElement("button");
       untrackButton.textContent = "Untrack";
       untrackButton.addEventListener("click", () => {
+        document.querySelector("#success")!.remove();
+        document.querySelector("#processingRequest")!.classList.remove("hidden");
         fetch(URLS.untrack, {
           method: "POST",
           headers: {
@@ -369,15 +376,31 @@ async function main() {
           },
           body: JSON.stringify({ productURL: tab.url!, userID: id! })
         })
-        .then(data => {
-          console.log(`Untracked!`);
+        .then(res => {
+          if (!res.ok) {
+            return res.text().then(text => { throw new Error(text) });
+          }
+          finishUp(1);
         })
-        .catch(console.log);
+        .catch(trackingError);
       });
       document.querySelector("#success")!.append(untrackButton);
 
       break;
     }
+  }
+
+  function finishUp(code: 0 | 1) {
+    const text = ["Tracked!", "Untracked!"][code];
+    document.querySelector("#processingRequest")!.classList.add("hidden");
+    document.querySelector("#goodRequest")!.classList.remove("hidden");
+    document.querySelector("#resultRequestText")!.textContent = text;
+  }
+
+  function trackingError(errorText: string) {
+    document.querySelector("#processingRequest")!.classList.add("hidden");
+    document.querySelector("#badRequest")!.classList.remove("hidden");
+    document.querySelector("#errorInfo")!.textContent = errorText;
   }
   
 };

@@ -115,6 +115,30 @@ label {
   margin-top: 0.75rem;
 }
 
+#requestResultText {
+  color: #00b300;
+}
+
+#errorInfo {
+  font-family: monospace;
+}
+
+#goodRequestCircle {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #00b300;
+  margin: 0 auto;
+}
+
+#badRequestCircle {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #962401;
+  margin: 0 auto;
+}
+
 .hidden {
   display: none;
 }
