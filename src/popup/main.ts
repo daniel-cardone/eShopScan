@@ -335,8 +335,6 @@ async function main() {
       const trackButton = document.createElement("button");
       trackButton.textContent = "Track";
       trackButton.addEventListener("click", () => {
-        document.querySelector("#success")!.remove();
-        document.querySelector("#processingRequest")!.classList.remove("hidden");
         const formData = new FormData(document.querySelector("form")!);
         const data: TrackRequest = {
           productURL: tab.url!,
@@ -346,6 +344,8 @@ async function main() {
         for (const key of formData.keys()) {
           data.formData[key] = formData.get(key)!.toString();
         }
+        document.querySelector("#processingRequest")!.classList.remove("hidden");
+        document.querySelector("#success")!.remove();
 
         fetch(URLS.track, {
           method: "POST",
@@ -394,7 +394,7 @@ async function main() {
     const text = ["Tracked!", "Untracked!"][code];
     document.querySelector("#processingRequest")!.classList.add("hidden");
     document.querySelector("#goodRequest")!.classList.remove("hidden");
-    document.querySelector("#resultRequestText")!.textContent = text;
+    document.querySelector("#requestResultText")!.textContent = text;
   }
 
   function trackingError(errorText: string) {
@@ -409,4 +409,4 @@ async function main() {
 
 // TODO: more amazon testing
 
-// TODO: animation for success from backend, fix fetch catching
+// TODO: animation for success from backend
