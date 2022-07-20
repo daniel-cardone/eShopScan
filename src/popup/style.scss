@@ -135,8 +135,8 @@ label {
 
 @mixin requestCircle($color) {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   border: 2px solid $color;
   margin: 0 auto;
 }

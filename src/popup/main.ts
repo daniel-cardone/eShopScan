@@ -42,7 +42,7 @@ function sliceURL(url: string) {
   return url;
 }
 
-function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Element, container: Element) {
+function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, container: Element) {
   let ignore = false;
   for (const labelToIgnore of labelsToIgnore) {
     if (labelToIgnore.type === "label-has-text") {
@@ -65,18 +65,8 @@ function shouldIgnoreLabel(labelsToIgnore: IgnoredLabel[], text: any, label: Ele
         ignore = true;
         break;
       }
-    } else if (labelToIgnore.type === "label-matches-selector") {
-      if (label.matches(labelToIgnore.rule)) {
-        ignore = true;
-        break;
-      }
     } else if (labelToIgnore.type === "parent-matches-selector") {
       if (container.matches(labelToIgnore.rule)) {
-        ignore = true;
-        break;
-      }
-    } else if (labelToIgnore.type === "label-has-selector") {
-      if (label.querySelector(labelToIgnore.rule) !== null) {
         ignore = true;
         break;
       }
@@ -227,7 +217,7 @@ async function main() {
           }
 
           const labelsToIgnore = data.label.labelsToIgnore;
-          if (shouldIgnoreLabel(labelsToIgnore, text, label, container)) continue;
+          if (shouldIgnoreLabel(labelsToIgnore, text, container)) continue;
 
           label.textContent = `${text}: `;
           label.setAttribute("for", text);

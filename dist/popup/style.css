@@ -125,16 +125,16 @@ label {
 
 #goodRequestCircle {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   border: 2px solid #00b300;
   margin: 0 auto;
 }
 
 #badRequestCircle {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   border: 2px solid #962401;
   margin: 0 auto;
 }
