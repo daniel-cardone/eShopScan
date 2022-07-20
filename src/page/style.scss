@@ -25,6 +25,25 @@ h1 {
   color: $primary;
 }
 
+h3 {
+  color: $secondary;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: $gray;
+  font-style: italic;
+  margin: 0;
+  padding: 0.25rem 0;
+  display: block;
+}
+
+.err {
+  color: $error;
+  text-align: center;
+}
+
 .card-container {
   display: flex;
   flex-direction: row;
@@ -33,7 +52,7 @@ h1 {
   .card {
     flex: 1 0 calc(50% - 2rem);
     border-top: 1px solid $gray;
-    height: 100px;
+    height: 192px;
     width: 100%;
     margin: 0 1rem;
     display: flex;
@@ -44,6 +63,12 @@ h1 {
       margin-right: 1rem;
       height: 100%;
       object-fit: contain;
+    }
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
     }
   }
 }
